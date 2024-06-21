@@ -15,6 +15,8 @@ Public Class Thanatos
     ' Estructura para almacenar las listas y contadores
     Private Solicitudes As New EstructuraSolicitudes()
 
+
+
     Private Sub Thanatos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Establecer las propiedades del control WebBrowser
         webBrowserControl.Dock = DockStyle.Fill
@@ -51,7 +53,6 @@ Public Class Thanatos
     End Sub
     Private Sub InicializarPictureBoxes()
         pictureBoxList.Add(picEagora)
-        pictureBoxList.Add(picContrasenia)
         pictureBoxList.Add(picSera)
         pictureBoxList.Add(picPF)
         pictureBoxList.Add(picAtlas)
@@ -448,6 +449,10 @@ Public Class Thanatos
         Public Property nombreQuery As String
     End Class
 
+
+
+
+
     Public Class EstructuraSolicitudes
         Public Property altasTelcoPendientes As New Solicitud()
         Public Property bajasPendientes As New Solicitud()
@@ -537,12 +542,6 @@ Public Class Thanatos
             Dim respuestaAlta = Await servicioAlta.AltaUsuario(ServicioModelo.Usuario)
 
             If respuestaAlta.Success Then
-                ' MessageBox.Show("Usuario dado de alta correctamente.")
-                logService.AddLog("Usuario dado de alta correctamente.")
-
-                ' Marco en verde el check de eAgora
-                picEagora.Image = My.Resources.checkVerde
-                picEagora.Tag = EstadoCheck.Correcto
 
                 ' Crear una instancia del ServicioMovilPin
                 Dim servicioMovilPin As New ServicioMovilPin()
@@ -552,13 +551,20 @@ Public Class Thanatos
 
                 ' Manejar la respuesta
                 If respuestaMovilPin.Success Then
-                    logService.AddLog("Móvil y PIN configurados correctamente.")
+                    logService.AddLog("Usuario dado de alta correctamente.")
+
+                    ' Marco en verde el check de eAgora
+                    picEagora.Image = My.Resources.checkVerde
+                    picEagora.Tag = EstadoCheck.Correcto
                 Else
                     MessageBox.Show("Error al configurar el móvil y PIN: " & respuestaMovilPin.msgError)
                     logService.AddLog("Error al configurar el móvil y PIN: " & respuestaMovilPin.msgError)
+                    ' Marco en rojo el check de eAgora
+                    picEagora.Image = My.Resources.checkRojo
+                    picEagora.Tag = EstadoCheck.Fallido
                 End If
             Else
-                ' MessageBox.Show("Error al dar de alta al usuario: " & respuestaAlta.msgError)
+                MessageBox.Show("Error al dar de alta al usuario: " & respuestaAlta.msgError)
                 logService.AddLog("Error al dar de alta al usuario: " & respuestaAlta.msgError)
 
                 ' Marco en rojo el check de eAgora
@@ -567,8 +573,8 @@ Public Class Thanatos
             End If
         Else
             ' Si la validación falla, mostrar el mensaje de error
-            MessageBox.Show("Error en los datos del usuario: " & resultadoValidacion.MensajeError)
-            logService.AddLog("Error en los datos del usuario: " & resultadoValidacion.MensajeError)
+            MessageBox.Show("Error en los datos del usuario: " & resultadoValidacion.msgError)
+            logService.AddLog("Error en los datos del usuario: " & resultadoValidacion.msgError)
 
             ' Marco en rojo el check de eAgora
             picEagora.Image = My.Resources.checkRojo
@@ -576,6 +582,32 @@ Public Class Thanatos
         End If
     End Sub
 
+    Private Async Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del validador y validar el usuario
+        Dim validador As New ValidadorUsuario()
+        Dim resultadoValidacion As ResultadoValidacion = validador.CompruebaCampos(ServicioModelo.Usuario)
+        ' Verificar si la validación fue exitosa
+        If resultadoValidacion.Success Then
+            ' Crear una instancia del ServicioAltaSera
+            Dim servicioAltaSera As New ServicioAltaSera()
+            Dim respuestaSera = Await servicioAltaSera.AltaSera(ServicioModelo.Usuario)
+
+            ' Manejar la respuesta del ServicioAltaSera
+            If respuestaSera.Success Then
+                MessageBox.Show("Alta en SERA correcta.")
+                logService.AddLog("Alta en SERA correcta.")
+            Else
+                MessageBox.Show("Error al dar de alta en SERA: " & respuestaSera.msgError)
+                logService.AddLog("Error al dar de alta en SERA: " & respuestaSera.msgError)
+            End If
+        Else
+            ' Si la validación falla, mostrar el mensaje de error
+            MessageBox.Show("Error en los datos del usuario: " & resultadoValidacion.msgError)
+            logService.AddLog("Error en los datos del usuario: " & resultadoValidacion.msgError)
+        End If
 
 
+    End Sub
 End Class

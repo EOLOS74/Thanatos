@@ -84,13 +84,11 @@ Partial Class Thanatos
         Label25 = New Label()
         Label24 = New Label()
         Label23 = New Label()
-        Label22 = New Label()
         Label21 = New Label()
         picWinest = New PictureBox()
         picAtlas = New PictureBox()
         picPF = New PictureBox()
         picSera = New PictureBox()
-        picContrasenia = New PictureBox()
         picEagora = New PictureBox()
         Panel4 = New Panel()
         Label30 = New Label()
@@ -109,6 +107,7 @@ Partial Class Thanatos
         picIgri = New PictureBox()
         picMira = New PictureBox()
         Button1 = New Button()
+        Button2 = New Button()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -121,7 +120,6 @@ Partial Class Thanatos
         CType(picAtlas, ComponentModel.ISupportInitialize).BeginInit()
         CType(picPF, ComponentModel.ISupportInitialize).BeginInit()
         CType(picSera, ComponentModel.ISupportInitialize).BeginInit()
-        CType(picContrasenia, ComponentModel.ISupportInitialize).BeginInit()
         CType(picEagora, ComponentModel.ISupportInitialize).BeginInit()
         Panel4.SuspendLayout()
         CType(picFlexwan, ComponentModel.ISupportInitialize).BeginInit()
@@ -702,24 +700,22 @@ Partial Class Thanatos
         Panel3.Controls.Add(Label25)
         Panel3.Controls.Add(Label24)
         Panel3.Controls.Add(Label23)
-        Panel3.Controls.Add(Label22)
         Panel3.Controls.Add(Label21)
         Panel3.Controls.Add(picWinest)
         Panel3.Controls.Add(picAtlas)
         Panel3.Controls.Add(picPF)
         Panel3.Controls.Add(picSera)
-        Panel3.Controls.Add(picContrasenia)
         Panel3.Controls.Add(picEagora)
         Panel3.Location = New Point(627, 1)
         Panel3.Name = "Panel3"
-        Panel3.Size = New Size(175, 166)
+        Panel3.Size = New Size(175, 138)
         Panel3.TabIndex = 80
         ' 
         ' Label26
         ' 
         Label26.AutoSize = True
         Label26.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label26.Location = New Point(39, 140)
+        Label26.Location = New Point(39, 114)
         Label26.Name = "Label26"
         Label26.Size = New Size(63, 21)
         Label26.TabIndex = 81
@@ -729,7 +725,7 @@ Partial Class Thanatos
         ' 
         Label25.AutoSize = True
         Label25.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label25.Location = New Point(39, 112)
+        Label25.Location = New Point(39, 86)
         Label25.Name = "Label25"
         Label25.Size = New Size(68, 21)
         Label25.TabIndex = 80
@@ -739,7 +735,7 @@ Partial Class Thanatos
         ' 
         Label24.AutoSize = True
         Label24.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label24.Location = New Point(39, 85)
+        Label24.Location = New Point(39, 59)
         Label24.Name = "Label24"
         Label24.Size = New Size(28, 21)
         Label24.TabIndex = 79
@@ -749,21 +745,11 @@ Partial Class Thanatos
         ' 
         Label23.AutoSize = True
         Label23.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label23.Location = New Point(39, 61)
+        Label23.Location = New Point(39, 35)
         Label23.Name = "Label23"
         Label23.Size = New Size(49, 21)
         Label23.TabIndex = 78
         Label23.Text = "SERA"
-        ' 
-        ' Label22
-        ' 
-        Label22.AutoSize = True
-        Label22.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label22.Location = New Point(39, 34)
-        Label22.Name = "Label22"
-        Label22.Size = New Size(96, 21)
-        Label22.TabIndex = 77
-        Label22.Text = "Contraseña"
         ' 
         ' Label21
         ' 
@@ -778,7 +764,7 @@ Partial Class Thanatos
         ' picWinest
         ' 
         picWinest.Image = CType(resources.GetObject("picWinest.Image"), Image)
-        picWinest.Location = New Point(3, 135)
+        picWinest.Location = New Point(3, 109)
         picWinest.Name = "picWinest"
         picWinest.Size = New Size(30, 28)
         picWinest.SizeMode = PictureBoxSizeMode.StretchImage
@@ -788,7 +774,7 @@ Partial Class Thanatos
         ' picAtlas
         ' 
         picAtlas.Image = CType(resources.GetObject("picAtlas.Image"), Image)
-        picAtlas.Location = New Point(3, 108)
+        picAtlas.Location = New Point(3, 82)
         picAtlas.Name = "picAtlas"
         picAtlas.Size = New Size(30, 28)
         picAtlas.SizeMode = PictureBoxSizeMode.StretchImage
@@ -798,7 +784,7 @@ Partial Class Thanatos
         ' picPF
         ' 
         picPF.Image = CType(resources.GetObject("picPF.Image"), Image)
-        picPF.Location = New Point(3, 81)
+        picPF.Location = New Point(3, 55)
         picPF.Name = "picPF"
         picPF.Size = New Size(30, 28)
         picPF.SizeMode = PictureBoxSizeMode.StretchImage
@@ -808,22 +794,12 @@ Partial Class Thanatos
         ' picSera
         ' 
         picSera.Image = CType(resources.GetObject("picSera.Image"), Image)
-        picSera.Location = New Point(3, 55)
+        picSera.Location = New Point(3, 29)
         picSera.Name = "picSera"
         picSera.Size = New Size(30, 28)
         picSera.SizeMode = PictureBoxSizeMode.StretchImage
         picSera.TabIndex = 72
         picSera.TabStop = False
-        ' 
-        ' picContrasenia
-        ' 
-        picContrasenia.Image = CType(resources.GetObject("picContrasenia.Image"), Image)
-        picContrasenia.Location = New Point(3, 28)
-        picContrasenia.Name = "picContrasenia"
-        picContrasenia.Size = New Size(30, 28)
-        picContrasenia.SizeMode = PictureBoxSizeMode.StretchImage
-        picContrasenia.TabIndex = 71
-        picContrasenia.TabStop = False
         ' 
         ' picEagora
         ' 
@@ -846,7 +822,7 @@ Partial Class Thanatos
         Panel4.Controls.Add(picOdisea)
         Panel4.Controls.Add(picVisord)
         Panel4.Controls.Add(picOdiseaCWO)
-        Panel4.Location = New Point(627, 167)
+        Panel4.Location = New Point(627, 139)
         Panel4.Name = "Panel4"
         Panel4.Size = New Size(175, 110)
         Panel4.TabIndex = 81
@@ -885,7 +861,7 @@ Partial Class Thanatos
         ' 
         Label27.AutoSize = True
         Label27.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label27.Location = New Point(39, 4)
+        Label27.Location = New Point(39, 7)
         Label27.Name = "Label27"
         Label27.Size = New Size(119, 21)
         Label27.TabIndex = 78
@@ -941,7 +917,7 @@ Partial Class Thanatos
         Panel5.Controls.Add(picIgri)
         Panel5.Controls.Add(picMira)
         Panel5.ForeColor = SystemColors.ControlLight
-        Panel5.Location = New Point(627, 277)
+        Panel5.Location = New Point(627, 249)
         Panel5.Name = "Panel5"
         Panel5.Size = New Size(175, 84)
         Panel5.TabIndex = 82
@@ -1011,12 +987,21 @@ Partial Class Thanatos
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(815, 15)
+        Button1.Location = New Point(809, 5)
         Button1.Name = "Button1"
-        Button1.Size = New Size(27, 48)
+        Button1.Size = New Size(27, 31)
         Button1.TabIndex = 83
         Button1.Text = "Button1"
         Button1.UseVisualStyleBackColor = True
+        ' 
+        ' Button2
+        ' 
+        Button2.Location = New Point(811, 77)
+        Button2.Name = "Button2"
+        Button2.Size = New Size(32, 25)
+        Button2.TabIndex = 84
+        Button2.Text = "Button2"
+        Button2.UseVisualStyleBackColor = True
         ' 
         ' Thanatos
         ' 
@@ -1024,6 +1009,7 @@ Partial Class Thanatos
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
         ClientSize = New Size(848, 603)
+        Controls.Add(Button2)
         Controls.Add(Button1)
         Controls.Add(Panel5)
         Controls.Add(Panel4)
@@ -1060,7 +1046,6 @@ Partial Class Thanatos
         CType(picAtlas, ComponentModel.ISupportInitialize).EndInit()
         CType(picPF, ComponentModel.ISupportInitialize).EndInit()
         CType(picSera, ComponentModel.ISupportInitialize).EndInit()
-        CType(picContrasenia, ComponentModel.ISupportInitialize).EndInit()
         CType(picEagora, ComponentModel.ISupportInitialize).EndInit()
         Panel4.ResumeLayout(False)
         Panel4.PerformLayout()
@@ -1138,13 +1123,11 @@ Partial Class Thanatos
     Friend WithEvents Label25 As Label
     Friend WithEvents Label24 As Label
     Friend WithEvents Label23 As Label
-    Friend WithEvents Label22 As Label
     Friend WithEvents Label21 As Label
     Friend WithEvents picWinest As PictureBox
     Friend WithEvents picAtlas As PictureBox
     Friend WithEvents picPF As PictureBox
     Friend WithEvents picSera As PictureBox
-    Friend WithEvents picContrasenia As PictureBox
     Friend WithEvents picEagora As PictureBox
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label30 As Label
@@ -1163,6 +1146,7 @@ Partial Class Thanatos
     Friend WithEvents picIgri As PictureBox
     Friend WithEvents picMira As PictureBox
     Friend WithEvents Button1 As Button
+    Friend WithEvents Button2 As Button
 
     Public Property LeerTareasPendientes As Control
 

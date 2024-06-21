@@ -5,6 +5,13 @@ Imports System.Text.RegularExpressions
 Imports System.Threading.Tasks
 
 Public Class ServicioAltaUsuario
+
+    Public Class RespuestaAlta
+        Public Property Success As Boolean
+        Public Property msgError As String
+        Public Property Data As String
+    End Class
+
     Private ReadOnly _httpClient As HttpClient
 
     Public Sub New()
@@ -17,8 +24,8 @@ Public Class ServicioAltaUsuario
         _httpClient.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray))
     End Sub
 
-    Public Async Function AltaUsuario(usuario As Usuario) As Task(Of ApiResponse)
-        Dim respuesta As New ApiResponse()
+    Public Async Function AltaUsuario(usuario As Usuario) As Task(Of RespuestaAlta)
+        Dim respuestaAlta As New RespuestaAlta()
         Try
             ' Patrón para validar el DNI (8 dígitos seguido de una letra)
             Dim patronDocumentoDNI As String = "^\d{8}[a-zA-Z]$"
@@ -35,8 +42,8 @@ Public Class ServicioAltaUsuario
                 ' Manejar casos donde el documento no coincide con ninguno de los patrones
                 usuario.telefonicatipodocumento = ""
                 usuario.telefonicanacionalidad = ""
-                respuesta.msgError = "Revise el NIF/NIE"
-                Return respuesta
+                respuestaAlta.msgError = "Revise el NIF/NIE"
+
             End If
 
             ' Construir los parámetros de la solicitud
@@ -81,32 +88,30 @@ Public Class ServicioAltaUsuario
             ' Procesar la respuesta
             If response.IsSuccessStatusCode Then
                 Dim responseData = Await response.Content.ReadAsStringAsync()
-                respuesta.Data = responseData
+                respuestaAlta.Data = responseData
                 If responseData.Contains("El usuario ha sido dado de alta correctamente") Then
-                    respuesta.Success = True
+                    respuestaAlta.Success = True
                 ElseIf responseData.Contains("Ya existe un usuario con el mismo numero de documento en la empresa") Then
-                    respuesta.msgError = "Ya existe un usuario con el mismo numero de documento en la empresa"
+                    respuestaAlta.msgError = "Ya existe un usuario con el mismo numero de documento en la empresa"
                 ElseIf responseData.Contains("No esta autorizado a acceder a la funcionalidad solicitada") Then
-                    respuesta.msgError = "No esta autorizado a acceder a la funcionalidad solicitada"
+                    respuestaAlta.msgError = "No esta autorizado a acceder a la funcionalidad solicitada"
                 ElseIf responseData.Contains("El identificador ya esta en uso") Then
-                    respuesta.msgError = "El identificador ya esta en uso"
+                    respuestaAlta.msgError = "El identificador ya esta en uso"
                 Else
-                    respuesta.msgError = "Error desconocido: " & responseData
+                    respuestaAlta.msgError = "Error desconocido: " & responseData
                 End If
             Else
-                respuesta.msgError = "Error en la solicitud HTTP: " & response.ReasonPhrase
+                respuestaAlta.msgError = "Error en la solicitud HTTP: " & response.ReasonPhrase
             End If
+            Return respuestaAlta
         Catch ex As Exception
-            respuesta.msgError = "Excepción: " & ex.Message
+            respuestaAlta.msgError = "Excepción: " & ex.Message
+            Return respuestaAlta
         End Try
-        Return respuesta
+
     End Function
 
 End Class
 
 
-Public Class ApiResponse
-    Public Property Success As Boolean
-    Public Property msgError As String
-    Public Property Data As String
-End Class
+

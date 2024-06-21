@@ -13,27 +13,27 @@ Public Class ValidadorUsuario
         Dim patronEmail As String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
         If String.IsNullOrEmpty(usuario.id) Then
-            respuesta.MensajeError = "Revise el campo Alias de eAgora. Es posible que solo estén pidiendo SGA y no un alta nueva." & Environment.NewLine
+            respuesta.msgError = "Revise el campo Alias de eAgora. Es posible que solo estén pidiendo SGA y no un alta nueva." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.userpassword) Then
-            respuesta.MensajeError &= "Revise el campo Password." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Password." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.eagora) Then
-            respuesta.MensajeError &= "Revise el eAgora." & Environment.NewLine
+            respuesta.msgError &= "Revise el eAgora." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.givenName) OrElse Not Regex.IsMatch(usuario.givenName, patronNombre) Then
-            respuesta.MensajeError &= "Revise el campo Nombre." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Nombre." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.sn) OrElse Not Regex.IsMatch(usuario.sn, patronApellidos) Then
-            respuesta.MensajeError &= "Revise el campo Apellidos." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Apellidos." & Environment.NewLine
         End If
         If Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoOtros) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
-            respuesta.MensajeError &= "Revise el campo nº Documento (patrón NIF: 12345678X, patrón Otros: X1234567X)." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo nº Documento (patrón NIF: 12345678X, patrón Otros: X1234567X)." & Environment.NewLine
         End If
         If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
             Dim c = MessageBox.Show("El documento es de formato FALSO. ¿Desea continuar el alta?", "Advertencia", MessageBoxButtons.YesNo)
             If c = DialogResult.No Then
-                respuesta.MensajeError &= "PETICIÓN DE DOCUMENTO FALSO CANCELADO." & Environment.NewLine
+                respuesta.msgError &= "PETICIÓN DE DOCUMENTO FALSO CANCELADO." & Environment.NewLine
             End If
         End If
         If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) Then
@@ -47,22 +47,22 @@ Public Class ValidadorUsuario
             usuario.telefonicanacionalidad = "EC"
         End If
         If String.IsNullOrEmpty(usuario.telephoneNumber) OrElse Not Regex.IsMatch(usuario.telephoneNumber, patronTelefono) Then
-            respuesta.MensajeError &= "Revise el campo Teléfono." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Teléfono." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.provincia) Then
-            respuesta.MensajeError &= "Revise el campo Provincia." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Provincia." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.perfil) Then
-            respuesta.MensajeError &= "Rellene el campo Perfil." & Environment.NewLine
+            respuesta.msgError &= "Rellene el campo Perfil." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.email) OrElse Not Regex.IsMatch(usuario.email, patronEmail) Then
-            respuesta.MensajeError &= "Revise el campo Email." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo Email." & Environment.NewLine
         End If
         If String.IsNullOrEmpty(usuario.sga) OrElse Not Regex.IsMatch(usuario.sga, patronSGA) Then
-            respuesta.MensajeError &= "Revise el campo SGA." & Environment.NewLine
+            respuesta.msgError &= "Revise el campo SGA." & Environment.NewLine
         End If
 
-        If String.IsNullOrEmpty(respuesta.MensajeError) Then
+        If String.IsNullOrEmpty(respuesta.msgError) Then
             respuesta.Success = True
         End If
 
@@ -72,5 +72,5 @@ End Class
 
 Public Class ResultadoValidacion
     Public Property Success As Boolean
-    Public Property MensajeError As String
+    Public Property msgError As String
 End Class

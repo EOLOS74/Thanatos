@@ -46,8 +46,8 @@ Public Class DatosUsuario
     Public Property Password As String
 End Class
 
-Public Class Respuesta
-    Public Property Success As Boolean
-    Public Property msgError As String
-    Public Property Data As String
-End Class
+'Public Class Respuesta
+'    Public Property Success As Boolean
+'    Public Property msgError As String
+'    Public Property Data As String
+'End Class
