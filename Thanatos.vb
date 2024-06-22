@@ -1,4 +1,5 @@
 ﻿Imports System.Text.Json
+Imports Thanatos.Thanatos
 
 Public Class Thanatos
     Private WithEvents webBrowserControl As New WebBrowser()
@@ -504,7 +505,7 @@ Public Class Thanatos
         End If
     End Sub
 
-    Private Sub ActualizarModeloDesdeControles()  ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''' Usar antes de subir info por la api
+    Private Sub ActualizarModeloDesdeControles()
         If ServicioModelo.Usuario IsNot Nothing Then
             ServicioModelo.Usuario.id = TextBox1.Text
             ServicioModelo.Usuario.eagora = TextBox2.Text
@@ -583,6 +584,7 @@ Public Class Thanatos
     End Sub
 
     Private Async Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
@@ -594,32 +596,91 @@ Public Class Thanatos
 
         ' Manejar la respuesta
         If respuesta.Success Then
-            MessageBox.Show("Alta en SERA")
-            ' Puedes agregar más lógica aquí si es necesario
+            logService.AddLog("Alta en SERA")
         Else
-            MessageBox.Show("Error al dar de alta en SERA: " & respuesta.msgError)
+            logService.AddLog("Error al dar de alta en SERA: " & respuesta.msgError)
         End If
-
-
     End Sub
 
     Private Async Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
         ' Crear una instancia del servicio de alta en PF
-        Dim servicioAltaPF As New ServicioAltaPF()
+        Dim servicioAltaPF As New ServicioAltaPF
 
         ' Llamar al método para realizar el alta en PF
         Dim respuesta = Await servicioAltaPF.AltaPF(ServicioModelo.Usuario)
 
         ' Manejar la respuesta
         If respuesta.Success Then
-            MessageBox.Show("Alta en PF")
-            ' Puedes agregar más lógica aquí si es necesario
+            logService.AddLog("Alta en PF")
         Else
-            MessageBox.Show("Error al dar de alta en PF: " & respuesta.msgError)
+            logService.AddLog("Error al dar de alta en PF: " & respuesta.msgError)
         End If
 
+    End Sub
+
+    Private Async Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en PF
+        Dim servicioAltaAtlas As New ServicioAltaAtlas
+        Dim resultadoSolicitud = Await servicioAltaAtlas.GetSolicitudAtlas(ServicioModelo.Usuario.eagora)
+
+        If resultadoSolicitud.Success Then
+
+
+            Dim resultadoAlta = Await servicioAltaAtlas.AltaAtlas(ServicioModelo.Usuario, resultadoSolicitud.Data)
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud AtlasPA: " & resultadoSolicitud.Data)
+                picAtlas.Image = My.Resources.checkVerde
+                picAtlas.Tag = EstadoCheck.Correcto
+            Else
+                logService.AddLog("Error en la alta en Atlas: " & resultadoAlta.msgError)
+                picAtlas.Image = My.Resources.checkRojo
+                picAtlas.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error en la solicitud de Atlas: " & resultadoSolicitud.msgError)
+            logService.AddLog("Error en la solicitud de Atlas: " & resultadoSolicitud.msgError)
+            picAtlas.Image = My.Resources.checkRojo
+            picAtlas.Tag = EstadoCheck.Fallido
+        End If
+    End Sub
+
+    Private Async Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        Dim servicioWinest As New ServicioAltaWinest()
+
+        ' Solicitar la ID de la solicitud
+        Dim solicitudRespuesta = Await servicioWinest.GetSolicitudWinest(ServicioModelo.Usuario.eagora)
+
+        If solicitudRespuesta.Success Then
+            ' Proceder a completar la solicitud con la ID obtenida
+            Dim resultadoAlta = Await servicioWinest.AltaWinest(ServicioModelo.Usuario, solicitudRespuesta.Data)
+
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud WINEST: " & solicitudRespuesta.Data)
+                picWinest.Image = My.Resources.checkVerde
+                picWinest.Tag = EstadoCheck.Correcto
+            Else
+                MessageBox.Show("Error al completar el alta en Winest: " & resultadoAlta.msgError)
+                logService.AddLog("Error al completar el alta en Winest: " & resultadoAlta.msgError)
+                picWinest.Image = My.Resources.checkRojo
+                picWinest.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error al solicitar la ID de solicitud de Winest: " & solicitudRespuesta.msgError)
+            logService.AddLog("Error al solicitar la ID de solicitud de Winest: " & solicitudRespuesta.msgError)
+            picWinest.Image = My.Resources.checkRojo
+            picWinest.Tag = EstadoCheck.Fallido
+        End If
     End Sub
 End Class

@@ -109,6 +109,8 @@ Partial Class Thanatos
         Button1 = New Button()
         Button2 = New Button()
         Button3 = New Button()
+        Button4 = New Button()
+        Button5 = New Button()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -135,9 +137,9 @@ Partial Class Thanatos
         ' 
         ' Panel1
         ' 
-        Panel1.Location = New Point(678, 413)
+        Panel1.Location = New Point(630, 342)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(88, 74)
+        Panel1.Size = New Size(172, 257)
         Panel1.TabIndex = 2
         ' 
         ' Panel2
@@ -584,7 +586,7 @@ Partial Class Thanatos
         txtLog.Name = "txtLog"
         txtLog.ReadOnly = True
         txtLog.ScrollBars = ScrollBars.Vertical
-        txtLog.Size = New Size(298, 229)
+        txtLog.Size = New Size(298, 267)
         txtLog.TabIndex = 38
         ' 
         ' lblColiseo
@@ -988,37 +990,57 @@ Partial Class Thanatos
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(809, 5)
+        Button1.Location = New Point(808, 6)
         Button1.Name = "Button1"
-        Button1.Size = New Size(27, 31)
+        Button1.Size = New Size(74, 26)
         Button1.TabIndex = 83
-        Button1.Text = "Button1"
+        Button1.Text = "eAogra"
         Button1.UseVisualStyleBackColor = True
         ' 
         ' Button2
         ' 
-        Button2.Location = New Point(809, 50)
+        Button2.Location = New Point(808, 32)
         Button2.Name = "Button2"
-        Button2.Size = New Size(32, 25)
+        Button2.Size = New Size(74, 25)
         Button2.TabIndex = 84
-        Button2.Text = "Button2"
+        Button2.Text = "SERA"
         Button2.UseVisualStyleBackColor = True
         ' 
         ' Button3
         ' 
-        Button3.Location = New Point(813, 101)
+        Button3.Location = New Point(808, 56)
         Button3.Name = "Button3"
-        Button3.Size = New Size(30, 25)
+        Button3.Size = New Size(74, 25)
         Button3.TabIndex = 85
-        Button3.Text = "Button3"
+        Button3.Text = "PF"
         Button3.UseVisualStyleBackColor = True
+        ' 
+        ' Button4
+        ' 
+        Button4.Location = New Point(808, 83)
+        Button4.Name = "Button4"
+        Button4.Size = New Size(74, 25)
+        Button4.TabIndex = 86
+        Button4.Text = "ATLAS"
+        Button4.UseVisualStyleBackColor = True
+        ' 
+        ' Button5
+        ' 
+        Button5.Location = New Point(808, 108)
+        Button5.Name = "Button5"
+        Button5.Size = New Size(74, 25)
+        Button5.TabIndex = 87
+        Button5.Text = "WINEST"
+        Button5.UseVisualStyleBackColor = True
         ' 
         ' Thanatos
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
-        ClientSize = New Size(848, 603)
+        ClientSize = New Size(888, 603)
+        Controls.Add(Button5)
+        Controls.Add(Button4)
         Controls.Add(Button3)
         Controls.Add(Button2)
         Controls.Add(Button1)
@@ -1159,6 +1181,8 @@ Partial Class Thanatos
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents Button3 As Button
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button5 As Button
 
     Public Property LeerTareasPendientes As Control
 
