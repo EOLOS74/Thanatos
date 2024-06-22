@@ -1,14 +1,12 @@
-﻿Imports System.Net.Http
-Imports System.Threading.Tasks
-Imports System.Windows.Forms
+﻿Imports System.Windows.Forms
 
 Public Class ServicioCambiarPassword
-    Private ReadOnly client As HttpClient
 
-    Public Sub New()
-        client = New HttpClient()
-        client.BaseAddress = New Uri("https://eagora.telefonica.es")
-    End Sub
+    Public Class Respuesta
+        Public Property Success As Boolean
+        Public Property msgError As String
+        Public Property Data As String
+    End Class
 
     Public Function CompruebaCampos(datos As DatosUsuario) As Respuesta
         Dim respuesta As New Respuesta With {.Success = False, .msgError = ""}
@@ -45,9 +43,3 @@ Public Class DatosUsuario
     Public Property Eagora As String
     Public Property Password As String
 End Class
-
-'Public Class Respuesta
-'    Public Property Success As Boolean
-'    Public Property msgError As String
-'    Public Property Data As String
-'End Class

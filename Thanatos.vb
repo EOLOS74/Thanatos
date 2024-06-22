@@ -583,31 +583,43 @@ Public Class Thanatos
     End Sub
 
     Private Async Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
-        ' Crear una instancia del validador y validar el usuario
-        Dim validador As New ValidadorUsuario()
-        Dim resultadoValidacion As ResultadoValidacion = validador.CompruebaCampos(ServicioModelo.Usuario)
-        ' Verificar si la validación fue exitosa
-        If resultadoValidacion.Success Then
-            ' Crear una instancia del ServicioAltaSera
-            Dim servicioAltaSera As New ServicioAltaSera()
-            Dim respuestaSera = Await servicioAltaSera.AltaSera(ServicioModelo.Usuario)
+        ' Crear una instancia del servicio de alta en PF
+        Dim servicioAltaSera As New ServicioAltaSera()
 
-            ' Manejar la respuesta del ServicioAltaSera
-            If respuestaSera.Success Then
-                MessageBox.Show("Alta en SERA correcta.")
-                logService.AddLog("Alta en SERA correcta.")
-            Else
-                MessageBox.Show("Error al dar de alta en SERA: " & respuestaSera.msgError)
-                logService.AddLog("Error al dar de alta en SERA: " & respuestaSera.msgError)
-            End If
+        ' Llamar al método para realizar el alta en PF
+        Dim respuesta = Await servicioAltaSera.AltaSera(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.Success Then
+            MessageBox.Show("Alta en SERA")
+            ' Puedes agregar más lógica aquí si es necesario
         Else
-            ' Si la validación falla, mostrar el mensaje de error
-            MessageBox.Show("Error en los datos del usuario: " & resultadoValidacion.msgError)
-            logService.AddLog("Error en los datos del usuario: " & resultadoValidacion.msgError)
+            MessageBox.Show("Error al dar de alta en SERA: " & respuesta.msgError)
         End If
 
+
+    End Sub
+
+    Private Async Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en PF
+        Dim servicioAltaPF As New ServicioAltaPF()
+
+        ' Llamar al método para realizar el alta en PF
+        Dim respuesta = Await servicioAltaPF.AltaPF(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.Success Then
+            MessageBox.Show("Alta en PF")
+            ' Puedes agregar más lógica aquí si es necesario
+        Else
+            MessageBox.Show("Error al dar de alta en PF: " & respuesta.msgError)
+        End If
 
     End Sub
 End Class

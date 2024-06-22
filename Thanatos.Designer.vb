@@ -108,6 +108,7 @@ Partial Class Thanatos
         picMira = New PictureBox()
         Button1 = New Button()
         Button2 = New Button()
+        Button3 = New Button()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -996,12 +997,21 @@ Partial Class Thanatos
         ' 
         ' Button2
         ' 
-        Button2.Location = New Point(811, 77)
+        Button2.Location = New Point(809, 50)
         Button2.Name = "Button2"
         Button2.Size = New Size(32, 25)
         Button2.TabIndex = 84
         Button2.Text = "Button2"
         Button2.UseVisualStyleBackColor = True
+        ' 
+        ' Button3
+        ' 
+        Button3.Location = New Point(813, 101)
+        Button3.Name = "Button3"
+        Button3.Size = New Size(30, 25)
+        Button3.TabIndex = 85
+        Button3.Text = "Button3"
+        Button3.UseVisualStyleBackColor = True
         ' 
         ' Thanatos
         ' 
@@ -1009,6 +1019,7 @@ Partial Class Thanatos
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
         ClientSize = New Size(848, 603)
+        Controls.Add(Button3)
         Controls.Add(Button2)
         Controls.Add(Button1)
         Controls.Add(Panel5)
@@ -1147,6 +1158,7 @@ Partial Class Thanatos
     Friend WithEvents picMira As PictureBox
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
+    Friend WithEvents Button3 As Button
 
     Public Property LeerTareasPendientes As Control
 
