@@ -24,7 +24,6 @@ Partial Class Thanatos
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Thanatos))
         BackgroundWorker1 = New ComponentModel.BackgroundWorker()
-        Panel1 = New Panel()
         Panel2 = New Panel()
         ComboBox2 = New ComboBox()
         ComboBox1 = New ComboBox()
@@ -106,11 +105,14 @@ Partial Class Thanatos
         picEscapex = New PictureBox()
         picIgri = New PictureBox()
         picMira = New PictureBox()
-        Button1 = New Button()
-        Button2 = New Button()
-        Button3 = New Button()
-        Button4 = New Button()
-        Button5 = New Button()
+        PanelLogin = New Panel()
+        OK = New Button()
+        PasswordTextBox = New TextBox()
+        UsernameTextBox = New TextBox()
+        PasswordLabel = New Label()
+        UsernameLabel = New Label()
+        LogoPictureBox = New PictureBox()
+        btnGestionar = New Button()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -133,14 +135,9 @@ Partial Class Thanatos
         CType(picEscapex, ComponentModel.ISupportInitialize).BeginInit()
         CType(picIgri, ComponentModel.ISupportInitialize).BeginInit()
         CType(picMira, ComponentModel.ISupportInitialize).BeginInit()
+        PanelLogin.SuspendLayout()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
-        ' 
-        ' Panel1
-        ' 
-        Panel1.Location = New Point(630, 342)
-        Panel1.Name = "Panel1"
-        Panel1.Size = New Size(172, 257)
-        Panel1.TabIndex = 2
         ' 
         ' Panel2
         ' 
@@ -709,7 +706,7 @@ Partial Class Thanatos
         Panel3.Controls.Add(picPF)
         Panel3.Controls.Add(picSera)
         Panel3.Controls.Add(picEagora)
-        Panel3.Location = New Point(627, 1)
+        Panel3.Location = New Point(627, 38)
         Panel3.Name = "Panel3"
         Panel3.Size = New Size(175, 138)
         Panel3.TabIndex = 80
@@ -825,7 +822,7 @@ Partial Class Thanatos
         Panel4.Controls.Add(picOdisea)
         Panel4.Controls.Add(picVisord)
         Panel4.Controls.Add(picOdiseaCWO)
-        Panel4.Location = New Point(627, 139)
+        Panel4.Location = New Point(627, 176)
         Panel4.Name = "Panel4"
         Panel4.Size = New Size(175, 110)
         Panel4.TabIndex = 81
@@ -920,7 +917,7 @@ Partial Class Thanatos
         Panel5.Controls.Add(picIgri)
         Panel5.Controls.Add(picMira)
         Panel5.ForeColor = SystemColors.ControlLight
-        Panel5.Location = New Point(627, 249)
+        Panel5.Location = New Point(627, 286)
         Panel5.Name = "Panel5"
         Panel5.Size = New Size(175, 84)
         Panel5.TabIndex = 82
@@ -988,62 +985,101 @@ Partial Class Thanatos
         picMira.TabIndex = 80
         picMira.TabStop = False
         ' 
-        ' Button1
+        ' PanelLogin
         ' 
-        Button1.Location = New Point(808, 6)
-        Button1.Name = "Button1"
-        Button1.Size = New Size(74, 26)
-        Button1.TabIndex = 83
-        Button1.Text = "eAogra"
-        Button1.UseVisualStyleBackColor = True
+        PanelLogin.Controls.Add(OK)
+        PanelLogin.Controls.Add(PasswordTextBox)
+        PanelLogin.Controls.Add(UsernameTextBox)
+        PanelLogin.Controls.Add(PasswordLabel)
+        PanelLogin.Controls.Add(UsernameLabel)
+        PanelLogin.Controls.Add(LogoPictureBox)
+        PanelLogin.Location = New Point(994, 185)
+        PanelLogin.Name = "PanelLogin"
+        PanelLogin.Size = New Size(575, 296)
+        PanelLogin.TabIndex = 88
         ' 
-        ' Button2
+        ' OK
         ' 
-        Button2.Location = New Point(808, 32)
-        Button2.Name = "Button2"
-        Button2.Size = New Size(74, 25)
-        Button2.TabIndex = 84
-        Button2.Text = "SERA"
-        Button2.UseVisualStyleBackColor = True
+        OK.BackColor = Color.Blue
+        OK.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        OK.ForeColor = Color.Yellow
+        OK.Location = New Point(291, 202)
+        OK.Name = "OK"
+        OK.Size = New Size(143, 36)
+        OK.TabIndex = 18
+        OK.Text = "Aceptar"
+        OK.UseVisualStyleBackColor = False
         ' 
-        ' Button3
+        ' PasswordTextBox
         ' 
-        Button3.Location = New Point(808, 56)
-        Button3.Name = "Button3"
-        Button3.Size = New Size(74, 25)
-        Button3.TabIndex = 85
-        Button3.Text = "PF"
-        Button3.UseVisualStyleBackColor = True
+        PasswordTextBox.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        PasswordTextBox.Location = New Point(291, 147)
+        PasswordTextBox.Name = "PasswordTextBox"
+        PasswordTextBox.PasswordChar = "*"c
+        PasswordTextBox.Size = New Size(143, 29)
+        PasswordTextBox.TabIndex = 17
         ' 
-        ' Button4
+        ' UsernameTextBox
         ' 
-        Button4.Location = New Point(808, 83)
-        Button4.Name = "Button4"
-        Button4.Size = New Size(74, 25)
-        Button4.TabIndex = 86
-        Button4.Text = "ATLAS"
-        Button4.UseVisualStyleBackColor = True
+        UsernameTextBox.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        UsernameTextBox.Location = New Point(291, 78)
+        UsernameTextBox.Name = "UsernameTextBox"
+        UsernameTextBox.Size = New Size(143, 29)
+        UsernameTextBox.TabIndex = 15
         ' 
-        ' Button5
+        ' PasswordLabel
         ' 
-        Button5.Location = New Point(808, 108)
-        Button5.Name = "Button5"
-        Button5.Size = New Size(74, 25)
-        Button5.TabIndex = 87
-        Button5.Text = "WINEST"
-        Button5.UseVisualStyleBackColor = True
+        PasswordLabel.BackColor = Color.White
+        PasswordLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        PasswordLabel.Location = New Point(291, 121)
+        PasswordLabel.Name = "PasswordLabel"
+        PasswordLabel.Size = New Size(143, 23)
+        PasswordLabel.TabIndex = 16
+        PasswordLabel.Text = "Contraseña"
+        PasswordLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' UsernameLabel
+        ' 
+        UsernameLabel.BackColor = Color.White
+        UsernameLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        UsernameLabel.Location = New Point(289, 52)
+        UsernameLabel.Name = "UsernameLabel"
+        UsernameLabel.Size = New Size(145, 23)
+        UsernameLabel.TabIndex = 13
+        UsernameLabel.Text = "Usuario eAgora"
+        UsernameLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' LogoPictureBox
+        ' 
+        LogoPictureBox.BackColor = Color.White
+        LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), Image)
+        LogoPictureBox.Location = New Point(0, 0)
+        LogoPictureBox.Name = "LogoPictureBox"
+        LogoPictureBox.Size = New Size(572, 296)
+        LogoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+        LogoPictureBox.TabIndex = 14
+        LogoPictureBox.TabStop = False
+        ' 
+        ' btnGestionar
+        ' 
+        btnGestionar.BackColor = SystemColors.MenuHighlight
+        btnGestionar.FlatStyle = FlatStyle.Popup
+        btnGestionar.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnGestionar.Location = New Point(627, 3)
+        btnGestionar.Name = "btnGestionar"
+        btnGestionar.Size = New Size(175, 34)
+        btnGestionar.TabIndex = 90
+        btnGestionar.Text = "Gestionar"
+        btnGestionar.UseVisualStyleBackColor = False
         ' 
         ' Thanatos
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
-        ClientSize = New Size(888, 603)
-        Controls.Add(Button5)
-        Controls.Add(Button4)
-        Controls.Add(Button3)
-        Controls.Add(Button2)
-        Controls.Add(Button1)
+        ClientSize = New Size(809, 603)
+        Controls.Add(btnGestionar)
+        Controls.Add(PanelLogin)
         Controls.Add(Panel5)
         Controls.Add(Panel4)
         Controls.Add(Panel3)
@@ -1060,7 +1096,6 @@ Partial Class Thanatos
         Controls.Add(txtLog)
         Controls.Add(PanelCambioContrasena)
         Controls.Add(Panel2)
-        Controls.Add(Panel1)
         Name = "Thanatos"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Thanatos"
@@ -1091,11 +1126,13 @@ Partial Class Thanatos
         CType(picEscapex, ComponentModel.ISupportInitialize).EndInit()
         CType(picIgri, ComponentModel.ISupportInitialize).EndInit()
         CType(picMira, ComponentModel.ISupportInitialize).EndInit()
+        PanelLogin.ResumeLayout(False)
+        PanelLogin.PerformLayout()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Label11 As Label
     Friend WithEvents Label10 As Label
@@ -1178,11 +1215,14 @@ Partial Class Thanatos
     Friend WithEvents picEscapex As PictureBox
     Friend WithEvents picIgri As PictureBox
     Friend WithEvents picMira As PictureBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
-    Friend WithEvents Button3 As Button
-    Friend WithEvents Button4 As Button
-    Friend WithEvents Button5 As Button
+    Friend WithEvents PanelLogin As Panel
+    Friend WithEvents OK As Button
+    Friend WithEvents PasswordTextBox As TextBox
+    Friend WithEvents UsernameTextBox As TextBox
+    Friend WithEvents PasswordLabel As Label
+    Friend WithEvents UsernameLabel As Label
+    Friend WithEvents LogoPictureBox As PictureBox
+    Friend WithEvents btnGestionar As Button
 
     Public Property LeerTareasPendientes As Control
 

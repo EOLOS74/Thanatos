@@ -12,7 +12,7 @@ Public Class ServicioMovilPin
         _httpClient.BaseAddress = New Uri("https://eagora.telefonica.es/")
 
         ' Configurar las credenciales de autenticación básica
-        Dim byteArray = Encoding.ASCII.GetBytes("x009ear:026telco")
+        Dim byteArray = Encoding.ASCII.GetBytes(Configuracion.UserPass)
         _httpClient.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray))
     End Sub
 
@@ -42,7 +42,6 @@ Public Class ServicioMovilPin
                 Dim responseData = Await response.Content.ReadAsStringAsync()
                 respuesta.Data = responseData
                 respuesta.Success = True
-                Console.WriteLine("Configurado movil y PIN")
             Else
                 respuesta.msgError = "Error en la solicitud HTTP: " & response.ReasonPhrase
             End If

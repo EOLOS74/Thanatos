@@ -2,6 +2,9 @@
 Imports System.Net.Mail
 
 Module Configuracion
+    Public UsuarioLogin As String
+    Public PasswordLogin As String
+    Public UserPass As String
 
     Public ReadOnly Provincias As New Dictionary(Of String, String) From {
         {"03", "ALICANTE"},
@@ -126,5 +129,7 @@ Module Configuracion
         Correcto
         Fallido
     End Enum
+
+
 
 End Module

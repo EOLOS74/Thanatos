@@ -18,7 +18,7 @@ Public Class ServicioAltaAtlas
         _httpClient.BaseAddress = New Uri("https://eagora.telefonica.es/")
 
         ' Configurar las credenciales de autenticación básica
-        Dim byteArray = Encoding.ASCII.GetBytes("x009ear:026telco")
+        Dim byteArray = Encoding.ASCII.GetBytes(Configuracion.UserPass)
         _httpClient.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray))
     End Sub
 

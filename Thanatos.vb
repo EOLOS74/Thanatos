@@ -1,16 +1,19 @@
 ﻿Imports System.Text.Json
-Imports Thanatos.Thanatos
+Imports System.Net.Http
+Imports System.Net.Http.Headers
+Imports System.Text
+Imports Thanatos.ServicioAltaPF
+
 
 Public Class Thanatos
-    Private WithEvents webBrowserControl As New WebBrowser()
     Private servicioNavegador As New ServicioNavegador()
-    Private servicioCambiarPassword As New ServicioCambiarPassword()
     Private navigateForPasswordChange As Boolean = False
     Private logService As LogService
     Private uiBlockService As UIBlockService
     Private pictureBoxList As List(Of PictureBox)
     Private textBoxList As List(Of TextBox)
-
+    Private alto As Integer
+    Private ancho As Integer
 
 
     ' Estructura para almacenar las listas y contadores
@@ -19,16 +22,21 @@ Public Class Thanatos
 
 
     Private Sub Thanatos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Establecer las propiedades del control WebBrowser
-        webBrowserControl.Dock = DockStyle.Fill
-        webBrowserControl.ScriptErrorsSuppressed = True
 
-        ' Agregar el control WebBrowser al panel
-        Panel1.Controls.Add(webBrowserControl)
+        ' Almaceno el tamaño del Thanatos
+        alto = Me.Height
+        ancho = Me.Width
 
-        ' Navega a eagora para forzar las credenciales
-        Dim urlEagora As String = "https://eagora.telefonica.es/portal/site/e-agora/"
-        webBrowserControl.Navigate(urlEagora)
+        ' Ajustar el tamaño al del panel del login
+        Me.Width = PanelLogin.Width
+        Me.Height = PanelLogin.Height
+
+        ' Mover y ajustar el PanelLogin
+        PanelLogin.Top = 0
+        PanelLogin.Left = 0
+
+        ' Establecer la posición inicial del formulario en el centro de la pantalla
+        Me.CenterToScreen()
 
         ' Suscribir los controles al evento MouseClick genérico
         SuscribirEventosMouseClick()
@@ -47,9 +55,10 @@ Public Class Thanatos
         InicializarPictureBoxes()
         InicializarTextBoxes()
 
-        ' Reseteo todos los checks y textboex
+        ' Reseteo todos los checks y textboxes
         resetCheck()
         resetTextBoxes()
+
 
     End Sub
     Private Sub InicializarPictureBoxes()
@@ -106,60 +115,6 @@ Public Class Thanatos
         End Select
     End Sub
 
-    Private Async Sub webBrowserControl_DocumentCompleted(sender As Object, e As WebBrowserDocumentCompletedEventArgs) Handles webBrowserControl.DocumentCompleted
-
-        ' Verificar si estamos en la página de inicio para refrescar
-        If webBrowserControl.Url.ToString().Contains("portal/site/e-agora/") Then
-            webBrowserControl.Refresh()
-            Return
-        End If
-
-        ' Obtener las credenciales almacenadas en el tag
-        Dim credentials As Tuple(Of String, String, Boolean) = TryCast(webBrowserControl.Tag, Tuple(Of String, String, Boolean))
-        If credentials Is Nothing Then Return
-
-        navigateForPasswordChange = credentials.Item3
-
-        ' Verificar si estamos navegando para el cambio de contraseña
-        If navigateForPasswordChange Then
-
-            webBrowserControl.Tag = New Tuple(Of String, String, Boolean)(credentials.Item1, credentials.Item2, False)
-
-            ' Inyectar el script para capturar alertas y enviar el formulario
-            Dim script As String = $"window.alert = function(msg) {{" &
-                               $"window.external.Notify(msg);" &
-                               $"}};" &
-                               $"var form = document.createElement('form');" &
-                               $"form.method = 'POST';" &
-                               $"form.action = '{webBrowserControl.Url.ToString()}';" &
-                               $"var idField = document.createElement('input');" &
-                               $"idField.name = 'id';" &
-                               $"idField.value = '{credentials.Item1}';" &
-                               $"form.appendChild(idField);" &
-                               $"var passwordField = document.createElement('input');" &
-                               $"passwordField.name = 'userPassword';" &
-                               $"passwordField.value = '{credentials.Item2}';" &
-                               $"form.appendChild(passwordField);" &
-                               $"document.body.appendChild(form);" &
-                               $"form.submit();"
-
-            webBrowserControl.Document.InvokeScript("eval", New Object() {script})
-        End If
-
-        ' Verificar la respuesta del cambio de contraseña
-        If webBrowserControl.Url.ToString().Contains("mod.jsp") Then
-            If webBrowserControl.DocumentText.Contains("Se ha producido un error") Then
-                ' No hacemos nada. No se presentan mensajes tampoco por la parte del webbrowser
-            ElseIf webBrowserControl.DocumentText.Contains("alert('Password en Historial')") Then
-                logService.AddLog($"Password en Historial: " + txtPassword.Text)
-            ElseIf webBrowserControl.DocumentText.Contains("var user") Then
-                ' Actualizar el tag para indicar que la navegación ya se ha realizado
-                webBrowserControl.Tag = New Tuple(Of String, String, Boolean)(credentials.Item1, credentials.Item2, False)
-                logService.AddLog($"Nueva contraseña: " + txtPassword.Text)
-                Clipboard.SetText($"Nueva contraseña: " + txtPassword.Text)
-            End If
-        End If
-    End Sub
     Private Async Function ConsultarApi(apiFunction As Func(Of Boolean, Task(Of String)), invertir As Boolean, descripcion As String, lista As List(Of JsonElement), actualizarContador As Action(Of Integer)) As Task
         uiBlockService.Show($"... consultando {descripcion} ...")
 
@@ -240,7 +195,6 @@ Public Class Thanatos
     End Sub
 
     Private Sub Carpeta_Click(sender As Object, e As EventArgs)
-
         ' Limpio los checks y los textboxes
         resetCheck()
         resetTextBoxes()
@@ -251,19 +205,26 @@ Public Class Thanatos
         Select Case CType(sender, PictureBox).Name
             Case "picCarpetaVerde"
                 lista = Solicitudes.altasColiseoPendientes.lista
-                usuarioSolicitante = lista(0).GetProperty("usuariosolicitacoliseo").GetString()
             Case "picCarpetaNaranja"
                 lista = Solicitudes.altasPendientes.lista
-                usuarioSolicitante = lista(0).GetProperty("usuariosolicitatelefonica").GetString()
             Case "picCarpetaAzul"
                 lista = Solicitudes.altasTelcoPendientes.lista
-                usuarioSolicitante = lista(0).GetProperty("usuariosolicitatelco").GetString()
             Case "picCarpetaMarron"
                 lista = Solicitudes.bajasPendientes.lista
-                usuarioSolicitante = lista(0).GetProperty("usuariosolicitabaja").GetString()
         End Select
 
         If lista IsNot Nothing AndAlso lista.Count > 0 Then
+            Select Case CType(sender, PictureBox).Name
+                Case "picCarpetaVerde"
+                    usuarioSolicitante = lista(0).GetProperty("usuariosolicitacoliseo").GetString()
+                Case "picCarpetaNaranja"
+                    usuarioSolicitante = lista(0).GetProperty("usuariosolicitatelefonica").GetString()
+                Case "picCarpetaAzul"
+                    usuarioSolicitante = lista(0).GetProperty("usuariosolicitatelco").GetString()
+                Case "picCarpetaMarron"
+                    usuarioSolicitante = lista(0).GetProperty("usuariosolicitabaja").GetString()
+            End Select
+
             Dim nif As String = lista(0).GetProperty("nif").GetString()
             TextBox7.Text = nif
             TextBox7.Tag = usuarioSolicitante
@@ -285,8 +246,11 @@ Public Class Thanatos
 
             ' Simular el evento KeyPress con la tecla ENTER
             TextBox7_KeyPress(TextBox7, New KeyPressEventArgs(Convert.ToChar(Keys.Enter)))
+        Else
+            MessageBox.Show("No hay elementos en la lista.")
         End If
     End Sub
+
 
     Private Async Sub TextBox7_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox7.KeyPress
         If e.KeyChar = Convert.ToChar(Keys.Enter) Then
@@ -394,23 +358,27 @@ Public Class Thanatos
     End Sub
 
 
-    Private Sub btnCambiarPassword_Click(sender As Object, e As EventArgs) Handles btnCambiarPassword.Click
-        Dim usuario As String = txtUsuario.Text
-        Dim nuevaPassword As String = txtPassword.Text
+    Private Async Sub btnCambiarPassword_Click(sender As Object, e As EventArgs) Handles btnCambiarPassword.Click
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
 
-        ' Validar los campos antes de intentar cambiar la contraseña
-        Dim datos As New DatosUsuario With {
-            .Eagora = usuario,
-            .Password = nuevaPassword
-        }
+        Dim servicioCambioPass As New ServicioCambioPass
+        Dim modoForzado = False
 
-        Dim respuesta = servicioCambiarPassword.CompruebaCampos(datos)
-        If Not respuesta.Success Then
-            logService.AddLog($"Error de validación: " + respuesta.msgError)
-            Return
+        Dim respuestaPass = Await servicioCambioPass.CambiarPassword(txtUsuario.Text, txtPassword.Text)
+
+        ' Manejar la respuesta
+        If respuestaPass.Success Then
+            logService.AddLog(respuestaPass.Data)
+            Clipboard.SetText(respuestaPass.Data)
+        Else
+            logService.AddLog(respuestaPass.msgError)
+            respuestaPass = Await servicioCambioPass.ForzarPassword(txtUsuario.Text, txtPassword.Text)
+            If respuestaPass.Success Then
+                logService.AddLog(respuestaPass.Data)
+                Clipboard.SetText(respuestaPass.Data)
+            End If
         End If
-
-        servicioCambiarPassword.IniciarCambioPassword(webBrowserControl, usuario, nuevaPassword)
     End Sub
 
     Private Sub txtPassword_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles txtPassword.MouseDoubleClick
@@ -470,6 +438,50 @@ Public Class Thanatos
         resetCheck()
         resetTextBoxes()
     End Sub
+
+    Private Async Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
+        Configuracion.UsuarioLogin = UsernameTextBox.Text
+        Configuracion.PasswordLogin = PasswordTextBox.Text
+        Configuracion.UserPass = UsernameTextBox.Text & ":" & PasswordTextBox.Text
+
+        Dim _httpClient = New HttpClient()
+        _httpClient.BaseAddress = New Uri("https://eagora.telefonica.es/")
+
+        ' Configurar las credenciales de autenticación básica
+        Dim byteArray = Encoding.ASCII.GetBytes(Configuracion.UserPass)
+        _httpClient.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray))
+        Dim response = Await _httpClient.GetAsync("/portal/site/e-agora/")
+        If response.IsSuccessStatusCode Then
+
+            Dim responseData = Await response.Content.ReadAsStringAsync()
+            Await Task.Delay(250)
+            If responseData.Contains("Usuarios Registrados") Then
+                MessageBox.Show("Credenciales incorrectas")
+                PanelLogin.Visible = False
+                Me.Width = ancho
+                Me.Height = alto
+                Me.CenterToScreen()
+
+            ElseIf responseData.Contains("Bienvenido") Then
+                PanelLogin.Visible = False
+
+                Me.Width = ancho
+                Me.Height = alto
+                Me.CenterToScreen()
+                Me.Text = "Thanatos - " & Configuracion.UsuarioLogin.ToUpper
+            End If
+        Else
+            MessageBox.Show("Credenciales incorrectas")
+        End If
+    End Sub
+
+    Private Sub PasswordTextBox_KeyPress(sender As Object, e As KeyPressEventArgs) Handles PasswordTextBox.KeyPress
+        If e.KeyChar = Convert.ToChar(Keys.Enter) Then
+
+            ' Simular el evento ENTER 
+            OK_Click(OK, New KeyPressEventArgs(Convert.ToChar(Keys.Enter)))
+        End If
+    End Sub
     Private Sub CargarDatosEnControles()
         If ServicioModelo.Usuario IsNot Nothing Then
             TextBox1.Text = ServicioModelo.Usuario.id
@@ -488,8 +500,8 @@ Public Class Thanatos
             TextBox10.Tag = ServicioModelo.Usuario.sga
             TextBox11.Text = ServicioModelo.Usuario.actividad
             TextBox11.Tag = ServicioModelo.Usuario.actividad
-            ComboBox1.Text = ServicioModelo.Usuario.perfilsga
-            ComboBox1.Tag = ServicioModelo.Usuario.perfilsga
+            ComboBox1.Text = ServicioModelo.Usuario.perfil
+            ComboBox1.Tag = ServicioModelo.Usuario.perfil
             ComboBox2.Text = ServicioModelo.Usuario.provincia
             ComboBox2.Tag = ServicioModelo.Usuario.provincia
             TextBox14.Text = ServicioModelo.Usuario.pindi
@@ -507,28 +519,34 @@ Public Class Thanatos
 
     Private Sub ActualizarModeloDesdeControles()
         If ServicioModelo.Usuario IsNot Nothing Then
-            ServicioModelo.Usuario.id = TextBox1.Text
-            ServicioModelo.Usuario.eagora = TextBox2.Text
-            ServicioModelo.Usuario.coliseo = TextBox3.Text
-            ServicioModelo.Usuario.userpassword = TextBox4.Text
-            ServicioModelo.Usuario.givenName = TextBox5.Text
-            ServicioModelo.Usuario.sn = TextBox6.Text
-            ServicioModelo.Usuario.telephoneNumber = TextBox8.Text
-            ServicioModelo.Usuario.email = TextBox9.Text
-            ServicioModelo.Usuario.sga = TextBox10.Text
-            ServicioModelo.Usuario.actividad = TextBox11.Text
-            ServicioModelo.Usuario.perfilsga = ComboBox1.Text
-            ServicioModelo.Usuario.provincia = ComboBox2.Text
-            ServicioModelo.Usuario.pindi = TextBox14.Text
-            ServicioModelo.Usuario.empresa = TextBox16.Text
-            ServicioModelo.Usuario.cif = TextBox16.Tag ' Asumiendo que CIF está en el Tag
-            ServicioModelo.Usuario.atelco = TextBox17.Text
-            ServicioModelo.Usuario.gestorPadre = TextBox15.Text
-            ServicioModelo.Usuario.usuarioSolicitante = TextBox18.Text
+            ' Ejecutar en el hilo de la interfaz de usuario (UI) utilizando Invoke
+            If Me.InvokeRequired Then
+                Me.Invoke(New MethodInvoker(AddressOf ActualizarModeloDesdeControles))
+            Else
+                ServicioModelo.Usuario.id = TextBox1.Text
+                ServicioModelo.Usuario.eagora = TextBox2.Text
+                ServicioModelo.Usuario.coliseo = TextBox3.Text
+                ServicioModelo.Usuario.userpassword = TextBox4.Text
+                ServicioModelo.Usuario.givenName = TextBox5.Text
+                ServicioModelo.Usuario.sn = TextBox6.Text
+                ServicioModelo.Usuario.telephoneNumber = TextBox8.Text
+                ServicioModelo.Usuario.email = TextBox9.Text
+                ServicioModelo.Usuario.sga = TextBox10.Text
+                ServicioModelo.Usuario.actividad = TextBox11.Text
+                ServicioModelo.Usuario.perfilsga = ComboBox1.Text
+                ServicioModelo.Usuario.provincia = ComboBox2.Text
+                ServicioModelo.Usuario.pindi = TextBox14.Text
+                ServicioModelo.Usuario.empresa = TextBox16.Text
+                ServicioModelo.Usuario.cif = TextBox16.Tag ' Asumiendo que CIF está en el Tag
+                ServicioModelo.Usuario.atelco = TextBox17.Text
+                ServicioModelo.Usuario.gestorPadre = TextBox15.Text
+                ServicioModelo.Usuario.usuarioSolicitante = TextBox18.Text
+            End If
         End If
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+    Private Async Function EjecutarAltaUsuario() As Task
         ActualizarModeloDesdeControles()
 
         ' Crear una instancia del validador y validar el usuario
@@ -581,28 +599,37 @@ Public Class Thanatos
             picEagora.Image = My.Resources.checkRojo
             picEagora.Tag = EstadoCheck.Fallido
         End If
-    End Sub
+    End Function
 
-    Private Async Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Private Async Function EjecutarAltaSera() As Task
 
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
-        ' Crear una instancia del servicio de alta en PF
+        ' Crear una instancia del servicio de alta en SERA
         Dim servicioAltaSera As New ServicioAltaSera()
 
-        ' Llamar al método para realizar el alta en PF
+        ' Llamar al método para realizar el alta en SERA
         Dim respuesta = Await servicioAltaSera.AltaSera(ServicioModelo.Usuario)
 
         ' Manejar la respuesta
         If respuesta.Success Then
-            logService.AddLog("Alta en SERA")
+            Invoke(Sub()
+                       logService.AddLog("Alta en SERA")
+                       ' Marco en verde el check de SERA
+                       picSera.Image = My.Resources.checkVerde
+                       picSera.Tag = EstadoCheck.Correcto
+                   End Sub)
         Else
-            logService.AddLog("Error al dar de alta en SERA: " & respuesta.msgError)
+            Invoke(Sub()
+                       logService.AddLog("Error al dar de alta en SERA: " & respuesta.msgError)
+                       picSera.Image = My.Resources.checkRojo
+                       picSera.Tag = EstadoCheck.Fallido
+                   End Sub)
         End If
-    End Sub
+    End Function
 
-    Private Async Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Async Function EjecutarAltaPF() As Task
 
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
@@ -616,18 +643,22 @@ Public Class Thanatos
         ' Manejar la respuesta
         If respuesta.Success Then
             logService.AddLog("Alta en PF")
+            picPF.Image = My.Resources.checkVerde
+            picPF.Tag = EstadoCheck.Correcto
         Else
             logService.AddLog("Error al dar de alta en PF: " & respuesta.msgError)
+            picPF.Image = My.Resources.checkRojo
+            picPF.Tag = EstadoCheck.Fallido
         End If
 
-    End Sub
+    End Function
 
-    Private Async Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+    Private Async Function EjecutarAltaAtlas() As Task
 
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
-        ' Crear una instancia del servicio de alta en PF
+        ' Crear una instancia del servicio de alta en ATLAS
         Dim servicioAltaAtlas As New ServicioAltaAtlas
         Dim resultadoSolicitud = Await servicioAltaAtlas.GetSolicitudAtlas(ServicioModelo.Usuario.eagora)
 
@@ -650,14 +681,14 @@ Public Class Thanatos
             picAtlas.Image = My.Resources.checkRojo
             picAtlas.Tag = EstadoCheck.Fallido
         End If
-    End Sub
+    End Function
 
-    Private Async Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+    Private Async Function EjecutarAltaWinest() As Task
 
         ' Actualizar el modelo desde los controles
         ActualizarModeloDesdeControles()
 
-        Dim servicioWinest As New ServicioAltaWinest()
+        Dim servicioWinest As New ServicioAltaWinest
 
         ' Solicitar la ID de la solicitud
         Dim solicitudRespuesta = Await servicioWinest.GetSolicitudWinest(ServicioModelo.Usuario.eagora)
@@ -671,7 +702,6 @@ Public Class Thanatos
                 picWinest.Image = My.Resources.checkVerde
                 picWinest.Tag = EstadoCheck.Correcto
             Else
-                MessageBox.Show("Error al completar el alta en Winest: " & resultadoAlta.msgError)
                 logService.AddLog("Error al completar el alta en Winest: " & resultadoAlta.msgError)
                 picWinest.Image = My.Resources.checkRojo
                 picWinest.Tag = EstadoCheck.Fallido
@@ -682,5 +712,74 @@ Public Class Thanatos
             picWinest.Image = My.Resources.checkRojo
             picWinest.Tag = EstadoCheck.Fallido
         End If
+    End Function
+
+    Private Async Function EjecutarAltaVisord() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        Dim servicioVisord As New ServicioAltaVisord()
+
+        Dim respuesta = Await servicioVisord.AltaVisord(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.Success Then
+            logService.AddLog("Alta en Visord correcta.")
+            picVisord.Image = My.Resources.checkVerde
+            picVisord.Tag = EstadoCheck.Correcto
+        Else
+            logService.AddLog("Error al dar de alta en Visord: " & respuesta.MensajeError)
+            picVisord.Image = My.Resources.checkRojo
+            picVisord.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarAltaOdiseaCWO() As Task
+
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        Dim servicioOdiseaCWO As New ServicioAltaOdiseaCWO()
+
+        Dim respuesta = Await servicioOdiseaCWO.AltaOdiseaCWO(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.Success Then
+            logService.AddLog("Alta en Odise CWO")
+            picOdiseaCWO.Image = My.Resources.checkVerde
+            picOdiseaCWO.Tag = EstadoCheck.Correcto
+        Else
+            logService.AddLog("Error al dar de alta en Odise CWO: " & respuesta.msgError)
+            picOdiseaCWO.Image = My.Resources.checkRojo
+            picOdiseaCWO.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+
+    Private Async Function ProcesarSolicitudesSecuenciales() As Task
+        For Each pic As PictureBox In pictureBoxList
+            If pic.Tag = EstadoCheck.Pendiente Then
+                Select Case pic.Name
+                    Case "picEagora"
+                        Await EjecutarAltaUsuario()
+                    Case "picSera"
+                        Await EjecutarAltaSera()
+                    Case "picPF"
+                        Await EjecutarAltaPF()
+                    Case "picAtlas"
+                        Await EjecutarAltaAtlas()
+                    Case "picWinest"
+                        Await EjecutarAltaWinest()
+                    Case "picOdiseaCWO"
+                        Await EjecutarAltaOdiseaCWO()
+                    Case "picVisord"
+                        Await EjecutarAltaVisord()
+                End Select
+            End If
+        Next
+    End Function
+
+    Private Async Sub btnGestionar_Click(sender As Object, e As EventArgs) Handles btnGestionar.Click
+        Await ProcesarSolicitudesSecuenciales()
     End Sub
 End Class
