@@ -113,6 +113,7 @@ Partial Class Thanatos
         UsernameLabel = New Label()
         LogoPictureBox = New PictureBox()
         btnGestionar = New Button()
+        Button1 = New Button()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -1072,12 +1073,22 @@ Partial Class Thanatos
         btnGestionar.Text = "Gestionar"
         btnGestionar.UseVisualStyleBackColor = False
         ' 
+        ' Button1
+        ' 
+        Button1.Location = New Point(657, 450)
+        Button1.Name = "Button1"
+        Button1.Size = New Size(106, 56)
+        Button1.TabIndex = 91
+        Button1.Text = "Button1"
+        Button1.UseVisualStyleBackColor = True
+        ' 
         ' Thanatos
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
         ClientSize = New Size(809, 603)
+        Controls.Add(Button1)
         Controls.Add(btnGestionar)
         Controls.Add(PanelLogin)
         Controls.Add(Panel5)
@@ -1223,6 +1234,7 @@ Partial Class Thanatos
     Friend WithEvents UsernameLabel As Label
     Friend WithEvents LogoPictureBox As PictureBox
     Friend WithEvents btnGestionar As Button
+    Friend WithEvents Button1 As Button
 
     Public Property LeerTareasPendientes As Control
 

@@ -755,6 +755,25 @@ Public Class Thanatos
         End If
     End Function
 
+    Private Async Function EjecutarAltaOdisea() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        Dim servicioAltaOdisea As New ServicioAltaOdisea()
+
+        Dim respuesta = Await servicioAltaOdisea.AltaUsuarioOdisea(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.Success Then
+            logService.AddLog("Alta en Odisea realizada correctamente.")
+            picOdisea.Image = My.Resources.checkVerde
+            picOdisea.Tag = EstadoCheck.Correcto
+        Else
+            logService.AddLog("Error al dar de alta en Odisea: " & respuesta.msgError)
+            picOdisea.Image = My.Resources.checkRojo
+            picOdisea.Tag = EstadoCheck.Fallido
+        End If
+    End Function
 
     Private Async Function ProcesarSolicitudesSecuenciales() As Task
         For Each pic As PictureBox In pictureBoxList
@@ -774,6 +793,8 @@ Public Class Thanatos
                         Await EjecutarAltaOdiseaCWO()
                     Case "picVisord"
                         Await EjecutarAltaVisord()
+                    Case "picOdisea"
+                        Await EjecutarAltaOdisea()
                 End Select
             End If
         Next
@@ -782,4 +803,24 @@ Public Class Thanatos
     Private Async Sub btnGestionar_Click(sender As Object, e As EventArgs) Handles btnGestionar.Click
         Await ProcesarSolicitudesSecuenciales()
     End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim smtpServer As String = "smtp-mail.outlook.com"
+        Dim smtpPort As Integer = 587
+        Dim smtpUsername As String = "si.soporte@atelcosoluciones.es"
+        Dim smtpPassword As String = "Saz23122"
+        Dim toAddress As String = "eligioalmuedo@gmail.com"
+        Dim subject As String = "Correo de prueba"
+        Dim body As String = "Hola Adriel. Esto es un correo de prueba de envio de correo por el Thanatos"
+
+        Try
+            Dim emailService As New EmailService()
+            emailService.SendEmail(smtpServer, smtpPort, smtpUsername, smtpPassword, toAddress, subject, body)
+            MessageBox.Show("Correo enviado correctamente.")
+        Catch ex As Exception
+            MessageBox.Show($"Error al enviar el correo electrónico: {ex.Message}")
+        End Try
+    End Sub
+
 End Class
