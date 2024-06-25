@@ -12,60 +12,65 @@ Public Class ValidadorUsuario
         Dim patronTelefono As String = "^\d{9}$"
         Dim patronEmail As String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-        If String.IsNullOrEmpty(usuario.id) Then
-            respuesta.msgError = "Revise el campo Alias de eAgora. Es posible que solo estén pidiendo SGA y no un alta nueva." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.userpassword) Then
-            respuesta.msgError &= "Revise el campo Password." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.eagora) Then
-            respuesta.msgError &= "Revise el eAgora." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.givenName) OrElse Not Regex.IsMatch(usuario.givenName, patronNombre) Then
-            respuesta.msgError &= "Revise el campo Nombre." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.sn) OrElse Not Regex.IsMatch(usuario.sn, patronApellidos) Then
-            respuesta.msgError &= "Revise el campo Apellidos." & Environment.NewLine
-        End If
-        If Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoOtros) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
-            respuesta.msgError &= "Revise el campo nº Documento (patrón NIF: 12345678X, patrón Otros: X1234567X)." & Environment.NewLine
-        End If
-        If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
-            Dim c = MessageBox.Show("El documento es de formato FALSO. ¿Desea continuar el alta?", "Advertencia", MessageBoxButtons.YesNo)
-            If c = DialogResult.No Then
-                respuesta.msgError &= "PETICIÓN DE DOCUMENTO FALSO CANCELADO." & Environment.NewLine
+        If usuario IsNot Nothing Then
+
+            If String.IsNullOrEmpty(usuario.id) Then
+                respuesta.msgError = "Revise el campo Alias de eAgora. Es posible que solo estén pidiendo SGA y no un alta nueva." & Environment.NewLine
             End If
-        End If
-        If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) Then
-            usuario.telefonicatipodocumento = "D"
-            usuario.telefonicanacionalidad = "ES"
-        ElseIf Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoOtros) Then
-            usuario.telefonicatipodocumento = "O"
-            usuario.telefonicanacionalidad = "EC"
-        ElseIf Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
-            usuario.telefonicatipodocumento = "O"
-            usuario.telefonicanacionalidad = "EC"
-        End If
-        If String.IsNullOrEmpty(usuario.telephoneNumber) OrElse Not Regex.IsMatch(usuario.telephoneNumber, patronTelefono) Then
-            respuesta.msgError &= "Revise el campo Teléfono." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.provincia) Then
-            respuesta.msgError &= "Revise el campo Provincia." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.perfil) Then
-            respuesta.msgError &= "Rellene el campo Perfil." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.email) OrElse Not Regex.IsMatch(usuario.email, patronEmail) Then
-            respuesta.msgError &= "Revise el campo Email." & Environment.NewLine
-        End If
-        If String.IsNullOrEmpty(usuario.sga) OrElse Not Regex.IsMatch(usuario.sga, patronSGA) Then
-            respuesta.msgError &= "Revise el campo SGA." & Environment.NewLine
-        End If
+            If String.IsNullOrEmpty(usuario.userpassword) Then
+                respuesta.msgError &= "Revise el campo Password." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.eagora) Then
+                respuesta.msgError &= "Revise el eAgora." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.givenName) OrElse Not Regex.IsMatch(usuario.givenName, patronNombre) Then
+                respuesta.msgError &= "Revise el campo Nombre." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.sn) OrElse Not Regex.IsMatch(usuario.sn, patronApellidos) Then
+                respuesta.msgError &= "Revise el campo Apellidos." & Environment.NewLine
+            End If
+            If Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoOtros) AndAlso Not Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
+                respuesta.msgError &= "Revise el campo nº Documento (patrón NIF: 12345678X, patrón Otros: X1234567X)." & Environment.NewLine
+            End If
+            If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
+                Dim c = MessageBox.Show("El documento es de formato FALSO. ¿Desea continuar el alta?", "Advertencia", MessageBoxButtons.YesNo)
+                If c = DialogResult.No Then
+                    respuesta.msgError &= "PETICIÓN DE DOCUMENTO FALSO CANCELADO." & Environment.NewLine
+                End If
+            End If
+            If Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoDNI) Then
+                usuario.telefonicatipodocumento = "D"
+                usuario.telefonicanacionalidad = "ES"
+            ElseIf Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoOtros) Then
+                usuario.telefonicatipodocumento = "O"
+                usuario.telefonicanacionalidad = "EC"
+            ElseIf Regex.IsMatch(usuario.telefonicadocumento, patronDocumentoFalso) Then
+                usuario.telefonicatipodocumento = "O"
+                usuario.telefonicanacionalidad = "EC"
+            End If
+            If String.IsNullOrEmpty(usuario.telephoneNumber) OrElse Not Regex.IsMatch(usuario.telephoneNumber, patronTelefono) Then
+                respuesta.msgError &= "Revise el campo Teléfono." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.provincia) Then
+                respuesta.msgError &= "Revise el campo Provincia." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.perfil) Then
+                respuesta.msgError &= "Rellene el campo Perfil." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.email) OrElse Not Regex.IsMatch(usuario.email, patronEmail) Then
+                respuesta.msgError &= "Revise el campo Email." & Environment.NewLine
+            End If
+            If String.IsNullOrEmpty(usuario.sga) OrElse Not Regex.IsMatch(usuario.sga, patronSGA) Then
+                respuesta.msgError &= "Revise el campo SGA." & Environment.NewLine
+            End If
 
-        If String.IsNullOrEmpty(respuesta.msgError) Then
-            respuesta.Success = True
+            If String.IsNullOrEmpty(respuesta.msgError) Then
+                respuesta.Success = True
+            End If
+        Else
+            respuesta.Success = False
+            respuesta.msgError &= "No hay usuario que gestionar." & Environment.NewLine
         End If
-
         Return respuesta
     End Function
 End Class

@@ -2,7 +2,8 @@
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
-Imports Thanatos.ServicioAltaPF
+
+
 
 
 Public Class Thanatos
@@ -74,6 +75,10 @@ Public Class Thanatos
         pictureBoxList.Add(picMira)
         pictureBoxList.Add(picIgri)
         pictureBoxList.Add(picEscapex)
+        pictureBoxList.Add(picUpdate)
+        pictureBoxList.Add(picTelco)
+        pictureBoxList.Add(picBaja)
+        pictureBoxList.Add(picCorreo)
 
         For Each pic As PictureBox In pictureBoxList
             AddHandler pic.Click, AddressOf PicAplicaciones_Click
@@ -114,6 +119,32 @@ Public Class Thanatos
                 check.Tag = EstadoCheck.Nada
         End Select
     End Sub
+
+    Private Sub DesmarcarTodosLosPics()
+        For Each pic As PictureBox In pictureBoxList
+            pic.Image = My.Resources.checkGris
+            pic.Tag = EstadoCheck.Nada
+        Next
+    End Sub
+
+    Private Sub MarcarPicsPerfilIM()
+        Dim picsToMark As New List(Of PictureBox) From {picEagora, picSera, picPF, picAtlas, picWinest, picOdiseaCWO, picVisord, picOdisea, picFlexwan}
+        For Each pic As PictureBox In picsToMark
+            pic.Image = My.Resources.checkAmarillo
+            pic.Tag = EstadoCheck.Pendiente
+        Next
+    End Sub
+
+    Private Sub MarcarPicsPerfilPEX()
+        Dim picsToMark As New List(Of PictureBox) From {picEagora, picSera, picPF, picAtlas, picWinest, picMira, picIgri, picEscapex}
+        For Each pic As PictureBox In picsToMark
+            pic.Image = My.Resources.checkAmarillo
+            pic.Tag = EstadoCheck.Pendiente
+        Next
+    End Sub
+
+
+
 
     Private Async Function ConsultarApi(apiFunction As Func(Of Boolean, Task(Of String)), invertir As Boolean, descripcion As String, lista As List(Of JsonElement), actualizarContador As Action(Of Integer)) As Task
         uiBlockService.Show($"... consultando {descripcion} ...")
@@ -188,11 +219,12 @@ Public Class Thanatos
 
         If e.Button = MouseButtons.Left Then
             Dim control As Control = CType(sender, Control)
-            If TypeOf control.Tag Is String AndAlso control.Tag IsNot Nothing Then
+            If TypeOf control.Tag Is String AndAlso Not String.IsNullOrEmpty(control.Tag.ToString()) Then
                 Clipboard.SetText(control.Tag.ToString())
             End If
         End If
     End Sub
+
 
     Private Sub Carpeta_Click(sender As Object, e As EventArgs)
         ' Limpio los checks y los textboxes
@@ -694,6 +726,7 @@ Public Class Thanatos
         Dim solicitudRespuesta = Await servicioWinest.GetSolicitudWinest(ServicioModelo.Usuario.eagora)
 
         If solicitudRespuesta.Success Then
+
             ' Proceder a completar la solicitud con la ID obtenida
             Dim resultadoAlta = Await servicioWinest.AltaWinest(ServicioModelo.Usuario, solicitudRespuesta.Data)
 
@@ -775,6 +808,230 @@ Public Class Thanatos
         End If
     End Function
 
+    Private Async Function EjecutarAltaFlexwan() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en Flexwan
+        Dim servicioAltaFlexwan As New ServicioAltaFlexwan()
+
+        ' Solicitar la ID de la solicitud
+        Dim solicitudRespuesta = Await servicioAltaFlexwan.GetSolicitudFlexwan(ServicioModelo.Usuario.eagora)
+
+        If solicitudRespuesta.Success Then
+
+            ' Proceder a completar la solicitud con la ID obtenida
+            Dim parametros = servicioAltaFlexwan.GetParametrosAltaFlexwan(solicitudRespuesta.Data)
+
+            Dim resultadoAlta = Await servicioAltaFlexwan.AltaFlexwan(parametros)
+
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud FLEXWAN: " & solicitudRespuesta.Data)
+                picFlexwan.Image = My.Resources.checkVerde
+                picFlexwan.Tag = EstadoCheck.Correcto
+            Else
+                logService.AddLog("Error al completar el alta en Flexwan: " & resultadoAlta.msgError)
+                picFlexwan.Image = My.Resources.checkRojo
+                picFlexwan.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error al solicitar la ID de solicitud de Flexwan: " & solicitudRespuesta.msgError)
+            logService.AddLog("Error al solicitar la ID de solicitud de Flexwan: " & solicitudRespuesta.msgError)
+            picFlexwan.Image = My.Resources.checkRojo
+            picFlexwan.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarAltaMira() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en Mira
+        Dim servicioAltaMira As New ServicioAltaMira()
+
+        ' Solicitar la ID de la solicitud
+        Dim solicitudRespuesta = Await servicioAltaMira.GetSolicitudMira(ServicioModelo.Usuario.eagora)
+
+        If solicitudRespuesta.Success Then
+
+            ' Proceder a completar la solicitud con la ID obtenida
+            'Dim parametros = servicioAltaMira.GetParametrosAltaMira(ServicioModelo.Usuario, solicitudRespuesta.Data)
+            Dim resultadoAlta = Await servicioAltaMira.AltaMira(ServicioModelo.Usuario, solicitudRespuesta.Data)
+
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud Mir@: " & solicitudRespuesta.Data)
+                picMira.Image = My.Resources.checkVerde
+                picMira.Tag = EstadoCheck.Correcto
+            Else
+                logService.AddLog("Error al completar el alta en Mira: " & resultadoAlta.msgError)
+                picMira.Image = My.Resources.checkRojo
+                picMira.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error al solicitar la ID de solicitud de Mira: " & solicitudRespuesta.msgError)
+            logService.AddLog("Error al solicitar la ID de solicitud de Mira: " & solicitudRespuesta.msgError)
+            picMira.Image = My.Resources.checkRojo
+            picMira.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarAltaIgri() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en IGRI
+        Dim servicioAltaIgri As New ServicioAltaIgri()
+
+        ' Solicitar la ID de la solicitud
+        Dim solicitudRespuesta = Await servicioAltaIgri.GetSolicitudIgri(ServicioModelo.Usuario.eagora)
+
+        If solicitudRespuesta.Success Then
+            ' Proceder a completar la solicitud con la ID obtenida
+            Dim parametros = servicioAltaIgri.GetParametrosAltaIgri(ServicioModelo.Usuario, solicitudRespuesta.Data)
+            Dim resultadoAlta = Await servicioAltaIgri.AltaIgri(ServicioModelo.Usuario, solicitudRespuesta.Data)
+
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud IGRI: " & solicitudRespuesta.Data)
+                picIgri.Image = My.Resources.checkVerde
+                picIgri.Tag = EstadoCheck.Correcto
+            Else
+                logService.AddLog("Error al completar el alta en IGRI: " & resultadoAlta.msgError)
+                picIgri.Image = My.Resources.checkRojo
+                picIgri.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error al solicitar la ID de solicitud de IGRI: " & solicitudRespuesta.msgError)
+            logService.AddLog("Error al solicitar la ID de solicitud de IGRI: " & solicitudRespuesta.msgError)
+            picIgri.Image = My.Resources.checkRojo
+            picIgri.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarAltaWpex() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en Wpex
+        Dim servicioAltaWpex As New ServicioAltaWpex()
+
+        ' Solicitar la ID de la solicitud
+        Dim solicitudRespuesta = Await servicioAltaWpex.GetSolicitudWpex(ServicioModelo.Usuario.eagora)
+
+        If solicitudRespuesta.Success Then
+            ' Proceder a completar la solicitud con la ID obtenida
+            Dim resultadoAlta = Await servicioAltaWpex.AltaWpex(solicitudRespuesta.Data)
+
+            If resultadoAlta.Success Then
+                logService.AddLog("Solicitud ESCAPEX: " & solicitudRespuesta.Data)
+                picEscapex.Image = My.Resources.checkVerde
+                picEscapex.Tag = EstadoCheck.Correcto
+            Else
+                logService.AddLog("Error al completar el alta en ESCAPEX: " & resultadoAlta.msgError)
+                picEscapex.Image = My.Resources.checkRojo
+                picEscapex.Tag = EstadoCheck.Fallido
+            End If
+        Else
+            MessageBox.Show("Error al solicitar la ID de solicitud de ESCAPEX: " & solicitudRespuesta.msgError)
+            logService.AddLog("Error al solicitar la ID de solicitud de ESCAPEX: " & solicitudRespuesta.msgError)
+            picEscapex.Image = My.Resources.checkRojo
+            picEscapex.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarActualizarAgenda() As Task
+
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        Dim servicioNavegador As New ServicioNavegador()
+        Dim respuesta = Await servicioNavegador.ActualizarAgendaUsuario(ServicioModelo.Usuario)
+
+        If respuesta.success Then
+            logService.AddLog("Agenda actualizada correctamente.")
+            picUpdate.Image = My.Resources.checkVerde
+            picUpdate.Tag = EstadoCheck.Correcto
+        Else
+            logService.AddLog("Error al actualizar la agenda: " & respuesta.msgError)
+            picUpdate.Image = My.Resources.checkRojo
+            picUpdate.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+    Private Async Function EjecutarAltaTelco() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de alta en TELCO
+        Dim servicioAltaTelco As New ServicioAltaTelco()
+
+        ' Llamar al método para realizar el alta en TELCO
+        Dim resultado = Await servicioAltaTelco.DarAltaTelco(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If resultado Then
+            logService.AddLog("PINDI Telco actualizado correctamente.")
+            picTelco.Image = My.Resources.checkVerde
+            picTelco.Tag = EstadoCheck.Correcto
+        Else
+            logService.AddLog("Error al actualizar el PINDI Telco.")
+            picTelco.Image = My.Resources.checkRojo
+            picTelco.Tag = EstadoCheck.Fallido
+        End If
+    End Function
+
+    Private Async Function EjecutarBajaTotal() As Task
+
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de baja total
+        Dim servicioBajaTotal As New ServicioBajaTotal()
+
+        ' Ejecutar el proceso de baja total
+        Dim respuesta = Await servicioBajaTotal.DarBajaTotal(ServicioModelo.Usuario)
+
+        ' Manejar la respuesta
+        If respuesta.success Then
+            logService.AddLog("Baja total realizada correctamente.")
+            picBaja.Image = My.Resources.checkVerde
+            picBaja.Image = My.Resources.checkVerde
+        Else
+            logService.AddLog("Error al realizar la baja total: " & respuesta.msgError)
+            picBaja.Image = My.Resources.checkRojo
+            picBaja.Image = My.Resources.checkRojo
+            ' Mostrar un mensaje de error al usuario
+            MessageBox.Show("Error al realizar la baja total: " & respuesta.msgError)
+        End If
+    End Function
+    Private Async Function EjecutarEnvioCorreo() As Task
+        ' Actualizar el modelo desde los controles
+        ActualizarModeloDesdeControles()
+
+        ' Crear una instancia del servicio de envio de correos
+        Dim servicioEnvioEmail As New ServicioEnvioEmail()
+
+        ' Creo una estructura con los valores del servidor de correos
+        Dim _estructuraEmail As EstructuraEmail = Configuracion.GetEmailDetails()
+
+        _estructuraEmail.ToAddresses = "eligioalmuedo@gmail.com"
+        _estructuraEmail.CcAddresses = Nothing
+        _estructuraEmail.BccAddresses = Nothing
+        _estructuraEmail.Subject = "Correo de prueba"
+        _estructuraEmail.Body = "Soy un puto genio"
+
+        ' Ejecutar el proceso de envio de correo
+        Dim respuesta = Await Task.Run(Function() servicioEnvioEmail.SendEmail(_estructuraEmail))
+        If respuesta Then
+            logService.AddLog("Correo enviado")
+            picCorreo.Image = My.Resources.checkVerde
+        Else
+            logService.AddLog("Error al enviar el correo")
+            picCorreo.Image = My.Resources.checkRojo
+        End If
+    End Function
+
+
+
+
     Private Async Function ProcesarSolicitudesSecuenciales() As Task
         For Each pic As PictureBox In pictureBoxList
             If pic.Tag = EstadoCheck.Pendiente Then
@@ -795,32 +1052,72 @@ Public Class Thanatos
                         Await EjecutarAltaVisord()
                     Case "picOdisea"
                         Await EjecutarAltaOdisea()
+                    Case "picFlexwan"
+                        Await EjecutarAltaFlexwan()
+                    Case "picMira"
+                        Await EjecutarAltaMira()
+                    Case "picIgri"
+                        Await EjecutarAltaIgri()
+                    Case "picEscapex"
+                        Await EjecutarAltaWpex()
+                    Case "picUpdate"
+                        Await EjecutarActualizarAgenda()
+                    Case "picTelco"
+                        Await EjecutarAltaTelco()
+                    Case "picBaja"
+                        Await EjecutarBajaTotal()
+                    Case "picCorreo"
+                        Await EjecutarEnvioCorreo()
+
                 End Select
             End If
         Next
     End Function
 
     Private Async Sub btnGestionar_Click(sender As Object, e As EventArgs) Handles btnGestionar.Click
-        Await ProcesarSolicitudesSecuenciales()
+        ' Verificar si hay algún pic marcado
+        Dim hayMarcados As Boolean = pictureBoxList.Any(Function(pic) pic.Tag = EstadoCheck.Pendiente)
+
+        ' Si hay marcados, preguntar por confirmación
+        If hayMarcados Then
+            Dim respuestaGestionar As DialogResult = MessageBox.Show("¿Arrancamos las gestiones?", "Confirmación", MessageBoxButtons.YesNo)
+            If respuestaGestionar = DialogResult.Yes Then
+                ' Ejecutar las gestiones si el usuario hace clic en 'Sí'
+                Await ProcesarSolicitudesSecuenciales()
+            End If
+        End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Dim smtpServer As String = "smtp-mail.outlook.com"
-        Dim smtpPort As Integer = 587
-        Dim smtpUsername As String = "si.soporte@atelcosoluciones.es"
-        Dim smtpPassword As String = "Saz23122"
-        Dim toAddress As String = "eligioalmuedo@gmail.com"
-        Dim subject As String = "Correo de prueba"
-        Dim body As String = "Hola Adriel. Esto es un correo de prueba de envio de correo por el Thanatos"
+    'Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Try
-            Dim emailService As New EmailService()
-            emailService.SendEmail(smtpServer, smtpPort, smtpUsername, smtpPassword, toAddress, subject, body)
-            MessageBox.Show("Correo enviado correctamente.")
-        Catch ex As Exception
-            MessageBox.Show($"Error al enviar el correo electrónico: {ex.Message}")
-        End Try
+    '    Dim smtpServer As String = "smtp-mail.outlook.com"
+    '    Dim smtpPort As Integer = 587
+    '    Dim smtpUsername As String = "si.soporte@atelcosoluciones.es"
+    '    Dim smtpPassword As String = "Saz23122"
+    '    Dim toAddress As String = "koko_sifredi@hotmail.com"
+    '    Dim ccAddresses As String = Nothing
+    '    Dim bccAddresses As String = Nothing
+    '    Dim subject As String = "Correo de prueba"
+    '    Dim body As String = "Esto es un correo de prueba de envio de correo por el Thanatos"
+
+    '    Try
+    '        Dim emailService As New EmailService()
+    '        emailService.SendEmail(smtpServer, smtpPort, smtpUsername, smtpPassword, toAddress, ccAddresses, bccAddresses, subject, body)
+    '        MessageBox.Show("Correo enviado correctamente.")
+    '    Catch ex As Exception
+    '        MessageBox.Show($"Error al enviar el correo electrónico: {ex.Message}")
+    '    End Try
+    'End Sub
+
+    Private Sub btnPerfilIM_Click(sender As Object, e As EventArgs) Handles btnPerfilIM.Click
+        DesmarcarTodosLosPics()
+        MarcarPicsPerfilIM()
+    End Sub
+
+    Private Sub btnPerfilPEX_Click(sender As Object, e As EventArgs) Handles btnPerfilPEX.Click
+        DesmarcarTodosLosPics()
+        MarcarPicsPerfilPEX()
     End Sub
 
 End Class

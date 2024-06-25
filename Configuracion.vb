@@ -130,6 +130,35 @@ Module Configuracion
         Fallido
     End Enum
 
+    Friend Class EstructuraEmail
+        Public Property SmtpServer As String
+        Public Property SmtpPort As Integer
+        Public Property SmtpUsername As String
+        Public Property SmtpPassword As String
+        Public Property ToAddresses As String
+        Public Property CcAddresses As String
+        Public Property BccAddresses As String
+        Public Property Subject As String
+        Public Property Body As String
+    End Class
 
+    Public Function GetEmailDetails() As EstructuraEmail
+        Dim emailDetails As New EstructuraEmail()
+        emailDetails.SmtpServer = Configuracion.SmtpServer
+        emailDetails.SmtpPort = Configuracion.SmtpPort
+        emailDetails.SmtpUsername = Configuracion.SmtpUsername
+        emailDetails.SmtpPassword = Configuracion.SmtpPassword
+        emailDetails.ToAddresses = Nothing
+        emailDetails.CcAddresses = Nothing
+        emailDetails.BccAddresses = Nothing
+        emailDetails.Subject = Nothing
+        emailDetails.Body = Nothing
+        Return emailDetails
+    End Function
+
+    Public SmtpServer As String = "smtp-mail.outlook.com"
+    Public SmtpPort As Integer = 587
+    Public SmtpUsername As String = "si.soporte@atelcosoluciones.es"
+    Public SmtpPassword As String = "Saz23122"
 
 End Module

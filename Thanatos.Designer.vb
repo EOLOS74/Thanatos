@@ -114,6 +114,17 @@ Partial Class Thanatos
         LogoPictureBox = New PictureBox()
         btnGestionar = New Button()
         Button1 = New Button()
+        btnPerfilIM = New Button()
+        btnPerfilPEX = New Button()
+        Panel1 = New Panel()
+        Label22 = New Label()
+        Label34 = New Label()
+        picCorreo = New PictureBox()
+        picBaja = New PictureBox()
+        Label36 = New Label()
+        Label35 = New Label()
+        picTelco = New PictureBox()
+        picUpdate = New PictureBox()
         Panel2.SuspendLayout()
         PanelCambioContrasena.SuspendLayout()
         CType(picRefrescar, ComponentModel.ISupportInitialize).BeginInit()
@@ -138,6 +149,11 @@ Partial Class Thanatos
         CType(picMira, ComponentModel.ISupportInitialize).BeginInit()
         PanelLogin.SuspendLayout()
         CType(LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        Panel1.SuspendLayout()
+        CType(picCorreo, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picBaja, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picTelco, ComponentModel.ISupportInitialize).BeginInit()
+        CType(picUpdate, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' Panel2
@@ -639,7 +655,6 @@ Partial Class Thanatos
         ' 
         ' picCarpetaVerde
         ' 
-        picCarpetaVerde.BorderStyle = BorderStyle.FixedSingle
         picCarpetaVerde.Image = CType(resources.GetObject("picCarpetaVerde.Image"), Image)
         picCarpetaVerde.Location = New Point(339, 173)
         picCarpetaVerde.Name = "picCarpetaVerde"
@@ -650,7 +665,6 @@ Partial Class Thanatos
         ' 
         ' picCarpetaNaranja
         ' 
-        picCarpetaNaranja.BorderStyle = BorderStyle.FixedSingle
         picCarpetaNaranja.Image = CType(resources.GetObject("picCarpetaNaranja.Image"), Image)
         picCarpetaNaranja.Location = New Point(340, 205)
         picCarpetaNaranja.Name = "picCarpetaNaranja"
@@ -661,7 +675,6 @@ Partial Class Thanatos
         ' 
         ' picCarpetaAzul
         ' 
-        picCarpetaAzul.BorderStyle = BorderStyle.FixedSingle
         picCarpetaAzul.Image = CType(resources.GetObject("picCarpetaAzul.Image"), Image)
         picCarpetaAzul.Location = New Point(339, 237)
         picCarpetaAzul.Name = "picCarpetaAzul"
@@ -672,7 +685,6 @@ Partial Class Thanatos
         ' 
         ' picCarpetaMarron
         ' 
-        picCarpetaMarron.BorderStyle = BorderStyle.FixedSingle
         picCarpetaMarron.Image = CType(resources.GetObject("picCarpetaMarron.Image"), Image)
         picCarpetaMarron.Location = New Point(340, 269)
         picCarpetaMarron.Name = "picCarpetaMarron"
@@ -707,9 +719,9 @@ Partial Class Thanatos
         Panel3.Controls.Add(picPF)
         Panel3.Controls.Add(picSera)
         Panel3.Controls.Add(picEagora)
-        Panel3.Location = New Point(627, 38)
+        Panel3.Location = New Point(627, 92)
         Panel3.Name = "Panel3"
-        Panel3.Size = New Size(175, 138)
+        Panel3.Size = New Size(195, 138)
         Panel3.TabIndex = 80
         ' 
         ' Label26
@@ -823,9 +835,9 @@ Partial Class Thanatos
         Panel4.Controls.Add(picOdisea)
         Panel4.Controls.Add(picVisord)
         Panel4.Controls.Add(picOdiseaCWO)
-        Panel4.Location = New Point(627, 176)
+        Panel4.Location = New Point(627, 230)
         Panel4.Name = "Panel4"
-        Panel4.Size = New Size(175, 110)
+        Panel4.Size = New Size(195, 110)
         Panel4.TabIndex = 81
         ' 
         ' Label30
@@ -842,7 +854,7 @@ Partial Class Thanatos
         ' 
         Label29.AutoSize = True
         Label29.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
-        Label29.Location = New Point(39, 62)
+        Label29.Location = New Point(39, 57)
         Label29.Name = "Label29"
         Label29.Size = New Size(68, 21)
         Label29.TabIndex = 80
@@ -918,9 +930,9 @@ Partial Class Thanatos
         Panel5.Controls.Add(picIgri)
         Panel5.Controls.Add(picMira)
         Panel5.ForeColor = SystemColors.ControlLight
-        Panel5.Location = New Point(627, 286)
+        Panel5.Location = New Point(627, 340)
         Panel5.Name = "Panel5"
-        Panel5.Size = New Size(175, 84)
+        Panel5.Size = New Size(195, 84)
         Panel5.TabIndex = 82
         ' 
         ' Label31
@@ -1066,28 +1078,159 @@ Partial Class Thanatos
         btnGestionar.BackColor = SystemColors.MenuHighlight
         btnGestionar.FlatStyle = FlatStyle.Popup
         btnGestionar.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnGestionar.ForeColor = Color.White
         btnGestionar.Location = New Point(627, 3)
         btnGestionar.Name = "btnGestionar"
-        btnGestionar.Size = New Size(175, 34)
+        btnGestionar.Size = New Size(195, 34)
         btnGestionar.TabIndex = 90
         btnGestionar.Text = "Gestionar"
         btnGestionar.UseVisualStyleBackColor = False
         ' 
         ' Button1
         ' 
-        Button1.Location = New Point(657, 450)
+        Button1.Location = New Point(715, 549)
         Button1.Name = "Button1"
-        Button1.Size = New Size(106, 56)
+        Button1.Size = New Size(87, 31)
         Button1.TabIndex = 91
         Button1.Text = "Button1"
         Button1.UseVisualStyleBackColor = True
+        ' 
+        ' btnPerfilIM
+        ' 
+        btnPerfilIM.BackColor = Color.FromArgb(CByte(92), CByte(184), CByte(92))
+        btnPerfilIM.FlatStyle = FlatStyle.Popup
+        btnPerfilIM.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnPerfilIM.ForeColor = Color.White
+        btnPerfilIM.Location = New Point(627, 36)
+        btnPerfilIM.Name = "btnPerfilIM"
+        btnPerfilIM.Size = New Size(195, 28)
+        btnPerfilIM.TabIndex = 92
+        btnPerfilIM.Text = "Perfil I+M"
+        btnPerfilIM.UseVisualStyleBackColor = False
+        ' 
+        ' btnPerfilPEX
+        ' 
+        btnPerfilPEX.BackColor = Color.FromArgb(CByte(240), CByte(173), CByte(78))
+        btnPerfilPEX.FlatStyle = FlatStyle.Popup
+        btnPerfilPEX.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        btnPerfilPEX.ForeColor = Color.White
+        btnPerfilPEX.Location = New Point(627, 63)
+        btnPerfilPEX.Name = "btnPerfilPEX"
+        btnPerfilPEX.Size = New Size(195, 28)
+        btnPerfilPEX.TabIndex = 93
+        btnPerfilPEX.Text = "Perfil PEX"
+        btnPerfilPEX.UseVisualStyleBackColor = False
+        ' 
+        ' Panel1
+        ' 
+        Panel1.BackColor = Color.FromArgb(CByte(255), CByte(255), CByte(181))
+        Panel1.Controls.Add(Label22)
+        Panel1.Controls.Add(Label34)
+        Panel1.Controls.Add(picCorreo)
+        Panel1.Controls.Add(picBaja)
+        Panel1.Controls.Add(Label36)
+        Panel1.Controls.Add(Label35)
+        Panel1.Controls.Add(picTelco)
+        Panel1.Controls.Add(picUpdate)
+        Panel1.ForeColor = SystemColors.ControlLight
+        Panel1.Location = New Point(627, 423)
+        Panel1.Name = "Panel1"
+        Panel1.Size = New Size(195, 113)
+        Panel1.TabIndex = 94
+        ' 
+        ' Label22
+        ' 
+        Label22.AutoSize = True
+        Label22.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Label22.ForeColor = SystemColors.ControlText
+        Label22.Location = New Point(39, 83)
+        Label22.Name = "Label22"
+        Label22.Size = New Size(122, 21)
+        Label22.TabIndex = 88
+        Label22.Text = "Correo gestion"
+        ' 
+        ' Label34
+        ' 
+        Label34.AutoSize = True
+        Label34.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Label34.ForeColor = SystemColors.ControlText
+        Label34.Location = New Point(39, 57)
+        Label34.Name = "Label34"
+        Label34.Size = New Size(83, 21)
+        Label34.TabIndex = 87
+        Label34.Text = "Baja total"
+        ' 
+        ' picCorreo
+        ' 
+        picCorreo.Image = CType(resources.GetObject("picCorreo.Image"), Image)
+        picCorreo.Location = New Point(3, 81)
+        picCorreo.Name = "picCorreo"
+        picCorreo.Size = New Size(30, 28)
+        picCorreo.SizeMode = PictureBoxSizeMode.StretchImage
+        picCorreo.TabIndex = 86
+        picCorreo.TabStop = False
+        ' 
+        ' picBaja
+        ' 
+        picBaja.Image = CType(resources.GetObject("picBaja.Image"), Image)
+        picBaja.Location = New Point(3, 54)
+        picBaja.Name = "picBaja"
+        picBaja.Size = New Size(30, 28)
+        picBaja.SizeMode = PictureBoxSizeMode.StretchImage
+        picBaja.TabIndex = 85
+        picBaja.TabStop = False
+        ' 
+        ' Label36
+        ' 
+        Label36.AutoSize = True
+        Label36.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Label36.ForeColor = SystemColors.ControlText
+        Label36.Location = New Point(39, 30)
+        Label36.Name = "Label36"
+        Label36.Size = New Size(93, 21)
+        Label36.TabIndex = 84
+        Label36.Text = "Alta TELCO"
+        ' 
+        ' Label35
+        ' 
+        Label35.AutoSize = True
+        Label35.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Label35.ForeColor = SystemColors.ControlText
+        Label35.Location = New Point(39, 4)
+        Label35.Name = "Label35"
+        Label35.Size = New Size(151, 21)
+        Label35.TabIndex = 83
+        Label35.Text = "Guarda en Agenda"
+        ' 
+        ' picTelco
+        ' 
+        picTelco.Image = CType(resources.GetObject("picTelco.Image"), Image)
+        picTelco.Location = New Point(3, 27)
+        picTelco.Name = "picTelco"
+        picTelco.Size = New Size(30, 28)
+        picTelco.SizeMode = PictureBoxSizeMode.StretchImage
+        picTelco.TabIndex = 81
+        picTelco.TabStop = False
+        ' 
+        ' picUpdate
+        ' 
+        picUpdate.Image = CType(resources.GetObject("picUpdate.Image"), Image)
+        picUpdate.Location = New Point(3, 0)
+        picUpdate.Name = "picUpdate"
+        picUpdate.Size = New Size(30, 28)
+        picUpdate.SizeMode = PictureBoxSizeMode.StretchImage
+        picUpdate.TabIndex = 80
+        picUpdate.TabStop = False
         ' 
         ' Thanatos
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.Gray
-        ClientSize = New Size(809, 603)
+        ClientSize = New Size(829, 603)
+        Controls.Add(Panel1)
+        Controls.Add(btnPerfilPEX)
+        Controls.Add(btnPerfilIM)
         Controls.Add(Button1)
         Controls.Add(btnGestionar)
         Controls.Add(PanelLogin)
@@ -1140,6 +1283,12 @@ Partial Class Thanatos
         PanelLogin.ResumeLayout(False)
         PanelLogin.PerformLayout()
         CType(LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        Panel1.ResumeLayout(False)
+        Panel1.PerformLayout()
+        CType(picCorreo, ComponentModel.ISupportInitialize).EndInit()
+        CType(picBaja, ComponentModel.ISupportInitialize).EndInit()
+        CType(picTelco, ComponentModel.ISupportInitialize).EndInit()
+        CType(picUpdate, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -1235,6 +1384,17 @@ Partial Class Thanatos
     Friend WithEvents LogoPictureBox As PictureBox
     Friend WithEvents btnGestionar As Button
     Friend WithEvents Button1 As Button
+    Friend WithEvents btnPerfilIM As Button
+    Friend WithEvents btnPerfilPEX As Button
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Label36 As Label
+    Friend WithEvents Label35 As Label
+    Friend WithEvents picTelco As PictureBox
+    Friend WithEvents picUpdate As PictureBox
+    Friend WithEvents Label22 As Label
+    Friend WithEvents Label34 As Label
+    Friend WithEvents picCorreo As PictureBox
+    Friend WithEvents picBaja As PictureBox
 
     Public Property LeerTareasPendientes As Control
 
